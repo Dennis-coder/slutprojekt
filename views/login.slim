@@ -1,0 +1,12 @@
+p = session[:login_error]
+
+form action="/login" method='post'
+    span Username
+    br
+    input type='text' name='username'
+    br
+    span  Password
+    br
+    input type='password' name='plaintext'
+    br
+    button type='submit' Login
