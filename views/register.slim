@@ -1,22 +1,20 @@
 p = session[:register_error]
 
-div class='register'
-    h1 Create an account
-    form action="/register" method='post'
-        span Email
-        br
-        input type='text' name='email'
-        br
-        span Username
-        br
-        input type='text' name='username'
-        br
-        span  Password
-        br
-        input type='password' name='plaintext'
-        br
-        span Location
-        br
-        input type='text' name='geotag'
-        br
-        button type='submit' Register
+form action="/register" method='post'
+    span Email
+    br
+    input type='text' name='email'
+    br
+    span Username
+    br
+    input type='text' name='username'
+    br
+    span  Password
+    br
+    input type='password' name='plaintext'
+    br
+    span Location
+    br
+    input type='text' name='geotag'
+    br
+    button type='submit' Register
