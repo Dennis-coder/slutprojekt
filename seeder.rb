@@ -54,8 +54,8 @@ class Seeder
 
     def self.populate_tables(db)
         users = [
-            {username: "User1", email: "1@gmail.com", password_hash: BCrypt::Password.create("one"), sign_up_date: "2019 11 14 15:21", admin: 1, geotag: "gothenburg"},
-            {username: "User2", email: "2@gmail.com", password_hash: BCrypt::Password.create("two"), sign_up_date: "2019 11 14 15:22", admin: 0, geotag: "gothenburg"}
+            {username: "User1", email: "1@gmail.com", password_hash: BCrypt::Password.create("one"), sign_up_date: "#{Time.now}", admin: 1, geotag: "gothenburg"},
+            {username: "User2", email: "2@gmail.com", password_hash: BCrypt::Password.create("two"), sign_up_date: "#{Time.now}", admin: 0, geotag: "gothenburg"}
         ]
 
         users.each do |user|
@@ -63,8 +63,8 @@ class Seeder
         end
 
         messages = [
-            {text: "Message test 1", image: "", timestamp: "2019 11 14 15:29", geotag: "gothenburg", status: 1, sender_id: 1, reciever_id: 2},
-            {text: "Message test 2", image: "", timestamp: "2019 11 14 15:30", geotag: "gothenburg", status: 1, sender_id: 2, reciever_id: 1}
+            {text: "Message test 1", image: "", timestamp: "#{Time.now}", geotag: "gothenburg", status: 1, sender_id: 1, reciever_id: 2},
+            {text: "Message test 2", image: "", timestamp: "#{Time.now}", geotag: "gothenburg", status: 1, sender_id: 2, reciever_id: 1}
         ]
 
         messages.each do |message|

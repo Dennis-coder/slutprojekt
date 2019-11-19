@@ -33,7 +33,7 @@ class User < DBEntity
     end
 
     def self.add(username, email, password, geotag)
-        db.execute("INSERT INTO user (username, email, password, sign_up_date, admin, geotag) VALUES(?,?,?,?,?,?)", username, email, BCrypt::Password.create(password), Time.now, 0, geotag)
+        db.execute("INSERT INTO users (username, email, password_hash, sign_up_date, admin, geotag) VALUES(?,?,?,?,?,?)", username, email, BCrypt::Password.create(password), "#{Time.now}", 0, geotag)
     end
 
 end

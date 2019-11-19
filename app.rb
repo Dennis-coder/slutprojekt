@@ -33,11 +33,19 @@ class Application < Sinatra::Base
 		password = User.password_by_id(user_id).first.first
 		password = BCrypt::Password.new(password)
 
+		p ""
+		p ""
+		p password
+		p BCrypt::Password.create(params[:plaintext])
+		p ""
+		p ""
+
 		if password == params[:plaintext]
 			session.delete(:login_error)
 			session[:user_id] = user_id
 			redirect '/home'
 		else
+			session[:login_error] = "Wrong password"
 			redirect '/login'
 		end
 	end
@@ -50,9 +58,12 @@ class Application < Sinatra::Base
 		if User.id_by_username(params[:username]).first != nil
 			session[:register_error] = "A user with that name already exists"
 			redirect '/register'
+		elsif params[:plaintext] != params[:plaintext_confirm]
+			session[:register_error] = "Passwords are not the same"
+			redirect '/register'
 		end
 
-		User.add(params[:username], params[:email], params[:password], params[:geotag])
+		User.add(params[:username], params[:email], params[:plaintext], params[:geotag])
 		session[:user_id] = User.id_by_username(params[:username])
 		redirect '/home'
 
