@@ -32,6 +32,10 @@ class User < DBEntity
         db.execute("SELECT email FROM users WHERE id = ?", id)
     end
 
+    def self.all_by_id(id)
+        db.execute("SELECT * FROM users WHERE id = ?", id)
+    end
+
     def self.add(username, email, password, geotag)
         db.execute("INSERT INTO users (username, email, password_hash, sign_up_date, admin, geotag) VALUES(?,?,?,?,?,?)", username, email, BCrypt::Password.create(password), "#{Time.now}", 0, geotag)
     end

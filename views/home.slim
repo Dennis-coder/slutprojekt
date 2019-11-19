@@ -1,7 +1,8 @@
-h1 Welcome back 
-h1 = User.username_by_id(session[:user_id]).first.first
+h1 Welcome back #{User.username_by_id(session[:user_id]).first.first}
 
 
+-for friend in @friends
+    == slim :'partials/friend_card', locals: {friend: friend}
 
 form action="/logout" method='post'
     button type='submit' Log out

@@ -12,7 +12,7 @@ class Application < Sinatra::Base
 			redirect '/'
 		end
 	end
-
+	
     get '/?' do
         slim :index
     end
@@ -32,13 +32,6 @@ class Application < Sinatra::Base
 		user_id.first
 		password = User.password_by_id(user_id).first.first
 		password = BCrypt::Password.new(password)
-
-		p ""
-		p ""
-		p password
-		p BCrypt::Password.create(params[:plaintext])
-		p ""
-		p ""
 
 		if password == params[:plaintext]
 			session.delete(:login_error)
@@ -72,11 +65,21 @@ class Application < Sinatra::Base
 	post '/logout' do
 		session.delete(:user_id)
 		redirect '/'
-
 	end
 
-    get '/home' do
-        slim :home
+	get '/home' do
+		friends_id = Friend.friendslist(session[:user_id])
+		@friends = []
+		unless friends_id.empty?
+    		friends_id.each do |friend_id|
+        		friend = User.username_by_id(friend_id)
+        		friend << Friend.last_interaction(session[:user_id], friend_id).first
+				@friends << friend
+			end
+			@friends.first
+		end
+		slim :home
+		
     end
 
 end

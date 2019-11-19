@@ -47,15 +47,18 @@ class Seeder
         db.execute <<-SQL
             CREATE TABLE "friends" (
                 "user_id" INTEGER NOT NULL,
-                "friends_id" INTEGER NOT NULL
+                "friends_id" INTEGER NOT NULL,
+                "last_interaction" TEXT NOT NULL,
+                "friends_since" TEXT NOT NULL
             );
         SQL
     end
 
     def self.populate_tables(db)
         users = [
-            {username: "User1", email: "1@gmail.com", password_hash: BCrypt::Password.create("one"), sign_up_date: "#{Time.now}", admin: 1, geotag: "gothenburg"},
-            {username: "User2", email: "2@gmail.com", password_hash: BCrypt::Password.create("two"), sign_up_date: "#{Time.now}", admin: 0, geotag: "gothenburg"}
+            {username: "1", email: "1@gmail.com", password_hash: BCrypt::Password.create("1"), sign_up_date: "#{Time.now}", admin: 1, geotag: "gothenburg"},
+            {username: "2", email: "2@gmail.com", password_hash: BCrypt::Password.create("2"), sign_up_date: "#{Time.now}", admin: 0, geotag: "gothenburg"},
+            {username: "3", email: "3@gmail.com", password_hash: BCrypt::Password.create("3"), sign_up_date: "#{Time.now}", admin: 0, geotag: "gothenburg"}
         ]
 
         users.each do |user|
@@ -72,12 +75,12 @@ class Seeder
         end
 
         friends = [
-            {user_id: 1, friends_id: 2},
-            {user_id: 2, friends_id: 1}
+            {user_id: 1, friends_id: 2, last_interaction: "#{Time.now}", friends_since: "#{Time.now}"},
+            {user_id: 1, friends_id: 3, last_interaction: "#{Time.now}", friends_since: "#{Time.now}"}
         ]
 
         friends.each do |friend|
-            db.execute("INSERT INTO friends (user_id, friends_id) VALUES(?,?)", friend[:user_id], friend[:friends_id])
+            db.execute("INSERT INTO friends (user_id, friends_id, last_interaction, friends_since) VALUES(?,?,?,?)", friend[:user_id], friend[:friends_id], friend[:last_interaction], friend[:friends_since])
         end
     end
 
