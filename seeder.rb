@@ -56,9 +56,9 @@ class Seeder
 
     def self.populate_tables(db)
         users = [
-            {username: "1", email: "1@gmail.com", password_hash: BCrypt::Password.create("1"), sign_up_date: "#{Time.now}", admin: 1, geotag: "gothenburg"},
-            {username: "2", email: "2@gmail.com", password_hash: BCrypt::Password.create("2"), sign_up_date: "#{Time.now}", admin: 0, geotag: "gothenburg"},
-            {username: "3", email: "3@gmail.com", password_hash: BCrypt::Password.create("3"), sign_up_date: "#{Time.now}", admin: 0, geotag: "gothenburg"}
+            {username: "1", email: "1@gmail.com", password_hash: BCrypt::Password.create("1"), sign_up_date: "#{Time.now.utc}", admin: 1, geotag: "gothenburg"},
+            {username: "2", email: "2@gmail.com", password_hash: BCrypt::Password.create("2"), sign_up_date: "#{Time.now.utc}", admin: 0, geotag: "gothenburg"},
+            {username: "3", email: "3@gmail.com", password_hash: BCrypt::Password.create("3"), sign_up_date: "#{Time.now.utc}", admin: 0, geotag: "gothenburg"}
         ]
 
         users.each do |user|
@@ -66,8 +66,8 @@ class Seeder
         end
 
         messages = [
-            {text: "Message test 1", image: "", timestamp: "#{Time.now}", geotag: "gothenburg", status: 1, sender_id: 1, reciever_id: 2},
-            {text: "Message test 2", image: "", timestamp: "#{Time.now}", geotag: "gothenburg", status: 1, sender_id: 2, reciever_id: 1}
+            {text: "Message test 1", image: "", timestamp: "#{Time.now.utc}", geotag: "gothenburg", status: 1, sender_id: 1, reciever_id: 2},
+            {text: "Message test 2", image: "", timestamp: "#{Time.now.utc}", geotag: "gothenburg", status: 1, sender_id: 2, reciever_id: 1}
         ]
 
         messages.each do |message|
@@ -75,8 +75,8 @@ class Seeder
         end
 
         friends = [
-            {user_id: 1, friends_id: 2, last_interaction: "#{Time.now}", friends_since: "#{Time.now}"},
-            {user_id: 1, friends_id: 3, last_interaction: "#{Time.now}", friends_since: "#{Time.now}"}
+            {user_id: 1, friends_id: 2, last_interaction: "#{Time.now.utc}", friends_since: "#{Time.now.utc}"},
+            {user_id: 1, friends_id: 3, last_interaction: "#{Time.now.utc}", friends_since: "#{Time.now.utc}"}
         ]
 
         friends.each do |friend|

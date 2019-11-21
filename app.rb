@@ -5,6 +5,7 @@ class Application < Sinatra::Base
 	before do 
 		@db = SQLite3::Database.new('db/websnap.db')
 		@db.results_as_hash = true
+		session[:user_id] = 1
 	end
 
 	before '/home/?' do
@@ -25,7 +26,7 @@ class Application < Sinatra::Base
 		user_id = User.id_by_username(params[:username]).first
 		
 		if user_id == nil
-			session[:login_error] = "No account with that name"
+			session[:login_error] = "No account with that name"		
 			redirect '/login'
 		end
 		
@@ -80,6 +81,15 @@ class Application < Sinatra::Base
 		end
 		slim :home
 		
-    end
+	end
+	
+	get '/friend/:username/?' do
+
+		recieved = Message.messages(session[:user_id], User.id_by_username(params[:username]))
+		sent = Message.messages(User.id_by_username(params[:username]), session[:user_id])
+		@messages = recieved
+		slim :friend
+
+	end
 
 end

@@ -1,3 +1,7 @@
+:root{
+    --minWidth: var(1000px)
+}
+
 body{
     width: 100%;
     min-height: 100vh;
@@ -29,7 +33,7 @@ main{
     flex-direction: column;
 }
 main div{
-    max-width: 1000px;
+    max-width: var(--minWidth);
     width: 100%;
     margin: 2rem;
     display: flex;

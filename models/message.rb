@@ -1,7 +1,7 @@
 class Message < DBEntity
 
-    def self.messages(user_id)
-        db.execute("SELECT * FROM messages WHERE (reciever_id, sender_id) VALUES(?,?) ", user_id, user_id)
+    def self.messages(sender_id, reciever_id)
+        db.execute("SELECT id, text, timestamp FROM messages WHERE reciever_id = ? AND sender_id = ?", sender_id, reciever_id)
     end
 
     def self.add
