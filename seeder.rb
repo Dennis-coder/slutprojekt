@@ -66,8 +66,10 @@ class Seeder
         end
 
         messages = [
-            {text: "Message test 1", image: "", timestamp: "#{Time.now.utc}", geotag: "gothenburg", status: 1, sender_id: 1, reciever_id: 2},
-            {text: "Message test 2", image: "", timestamp: "#{Time.now.utc}", geotag: "gothenburg", status: 1, sender_id: 2, reciever_id: 1}
+            {text: "Message test 1", image: "", timestamp: "#{Time.now.utc}", geotag: "gothenburg", status: 1, sender_id: 3, reciever_id: 1},
+            {text: "Message test 2", image: "", timestamp: "#{Time.now.utc}", geotag: "gothenburg", status: 1, sender_id: 2, reciever_id: 1},
+            {text: "Message test 3", image: "", timestamp: "#{Time.now.utc+5}", geotag: "gothenburg", status: 1, sender_id: 2, reciever_id: 1},
+            {text: "Message test 4", image: "", timestamp: "#{Time.now.utc+6}", geotag: "gothenburg", status: 1, sender_id: 2, reciever_id: 1}
         ]
 
         messages.each do |message|

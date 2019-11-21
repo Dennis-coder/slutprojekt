@@ -35,6 +35,7 @@ main{
 main div{
     max-width: var(--minWidth);
     width: 100%;
+    max-width: var(--minWidth);
     margin: 2rem;
     display: flex;
     align-items: center;

@@ -2,6 +2,7 @@ div class='login'
     h1 Log in to your account
     
     p = session[:login_error]
+    -session.delete(:login_error)
 
     form action="/login" method='post'
         span Username

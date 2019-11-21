@@ -23,23 +23,12 @@ class Application < Sinatra::Base
     end
 
 	post '/login' do
-		user_id = User.id_by_username(params[:username]).first
-		
-		if user_id == nil
-			session[:login_error] = "No account with that name"		
-			redirect '/login'
-		end
-		
-		user_id.first
-		password = User.password_by_id(user_id).first.first
-		password = BCrypt::Password.new(password)
-
-		if password == params[:plaintext]
-			session.delete(:login_error)
-			session[:user_id] = user_id
+		returned = Validator.login(params[:username], params[:plaintext])
+		if returned.is_a? Integer
+			session[:user_id] = returned
 			redirect '/home'
 		else
-			session[:login_error] = "Wrong password"
+			session[:login_error] = returned
 			redirect '/login'
 		end
 	end
@@ -49,18 +38,15 @@ class Application < Sinatra::Base
 	end
 
 	post '/register' do
-		if User.id_by_username(params[:username]).first != nil
-			session[:register_error] = "A user with that name already exists"
-			redirect '/register'
-		elsif params[:plaintext] != params[:plaintext_confirm]
-			session[:register_error] = "Passwords are not the same"
+		returned = Validator.register(params[:username], params[:plaintext], params[:plaintext_confirm])
+		if returned == true
+			User.add(params[:username], params[:email], params[:plaintext], params[:geotag])
+			session[:user_id] = User.id_by_username(params[:username])
+			redirect '/home'
+		else
+			session[:register_error] = returned
 			redirect '/register'
 		end
-
-		User.add(params[:username], params[:email], params[:plaintext], params[:geotag])
-		session[:user_id] = User.id_by_username(params[:username])
-		redirect '/home'
-
 	end
 
 	post '/logout' do
@@ -87,7 +73,7 @@ class Application < Sinatra::Base
 
 		recieved = Message.messages(session[:user_id], User.id_by_username(params[:username]))
 		sent = Message.messages(User.id_by_username(params[:username]), session[:user_id])
-		@messages = recieved
+		@messages = Sorter.messages(recieved, sent)
 		slim :friend
 
 	end
