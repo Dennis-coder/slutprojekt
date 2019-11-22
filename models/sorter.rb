@@ -1,15 +1,13 @@
 class Sorter
 
     def self.timestamp_compare(time1, time2)
-
         time1[2].each_char.with_index do |time, index|
             if time > time2[2][index]
-                return time1.join
+                return time1
             elsif time < time2[2][index]
-                return time2.join
+                return time2
             end
         end
-
     end
 
     def self.timestamp_sort(list)
@@ -39,14 +37,8 @@ class Sorter
 
     def self.messages(list1, list2)
 
-        p list1
-        p list2
-
         list1 = Sorter.timestamp_sort(list1)
         list2 = Sorter.timestamp_sort(list2)
-
-        p list1
-        p list2
 
         messages = []
 

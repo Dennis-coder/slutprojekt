@@ -1,0 +1,10 @@
+div class='conversation'
+    h1 Your conversation with #{params[:username]}
+    
+    form class='send_message' action="/friend/#{params[:username]}/send" method='post'
+        input type='text' name='message'
+        br
+        button type='submit' Send
+
+    -for message in @messages
+        == slim :'partials/message', locals: {message: message}

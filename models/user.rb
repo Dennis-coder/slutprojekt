@@ -32,6 +32,14 @@ class User < DBEntity
         db.execute("SELECT email FROM users WHERE id = ?", id)
     end
 
+    def self.admin?(id)
+        if db.execute("SELECT admin FROM users WHERE id = ?", id) == 1
+            return true
+        else
+            return false
+        end
+    end
+
     def self.all_by_id(id)
         db.execute("SELECT * FROM users WHERE id = ?", id)
     end

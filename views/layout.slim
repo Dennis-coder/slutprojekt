@@ -10,11 +10,16 @@ html lang="en"
     body
         header
             div
-                a href="/"
+                -if session[:user_id] != nil
+                    a class='button' href='/home' Home
                     img src='/media/logo.png'
-        
+                    a class='button' href='/logout' Logout
+                -else 
+                    a href="/"
+                        img src='/media/logo.png'
+
         main
-                == yield
+            == yield
 
         footer 
             div

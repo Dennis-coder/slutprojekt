@@ -13,6 +13,12 @@ class Application < Sinatra::Base
 			redirect '/'
 		end
 	end
+
+	before '/friend/*' do
+		if session[:user_id] == nil
+			redirect '/'
+		end
+	end
 	
     get '/?' do
         slim :index
@@ -49,7 +55,7 @@ class Application < Sinatra::Base
 		end
 	end
 
-	post '/logout' do
+	get '/logout' do
 		session.delete(:user_id)
 		redirect '/'
 	end
@@ -74,7 +80,14 @@ class Application < Sinatra::Base
 		recieved = Message.messages(session[:user_id], User.id_by_username(params[:username]))
 		sent = Message.messages(User.id_by_username(params[:username]), session[:user_id])
 		@messages = Sorter.messages(recieved, sent)
-		slim :friend
+		slim :conversation
+
+	end
+
+	post '/friend/:reciever/send' do
+
+		Message.send(params[:message], User.geotag_by_id(session[:user_id]), session[:user_id], User.id_by_username(params[:reciever]))
+		redirect "/friend/#{params[:reciever]}"
 
 	end
 

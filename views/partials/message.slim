@@ -1,3 +1,8 @@
 .message
-    p= "#{message[1]}"
-    p= "Sent at #{message[2]}"
+    div class='message'
+        -if message[3] == session[:user_id]
+            p Me:
+        -else 
+            p= "#{User.username_by_id(message[3]).first.first}:"
+        p= "#{message[1]}"
+        p= "Sent at #{message[2]}"

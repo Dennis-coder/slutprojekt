@@ -1,5 +1,5 @@
 :root{
-    --minWidth: var(1000px)
+    --maxWidth: var(1000px)
 }
 
 body{
@@ -14,11 +14,20 @@ body{
 }
 
 header{
-    background: rgb(240, 240, 0);
     width: 100%;
+    background: rgb(240, 240, 0);
     display: flex;
     align-items: center;
     justify-content: center;
+}
+
+header div{
+    max-width: 1000px;
+    width: 100%;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: space-around;
 }
 
 header img{
@@ -33,9 +42,8 @@ main{
     flex-direction: column;
 }
 main div{
-    max-width: var(--minWidth);
+    max-width: 1000px;
     width: 100%;
-    max-width: var(--minWidth);
     margin: 2rem;
     display: flex;
     align-items: center;
@@ -67,7 +75,7 @@ main div{
     text-shadow: -1px -1px 0 #000, 1px -1px 0 #000, -1px 1px 0 #000, 1px 1px 0 #000;
 }
 
-.index_buttons a{
+a.button{
     background-color: rgba(150, 150, 150, 1);
     text-decoration: none;
     color: white;
@@ -75,17 +83,34 @@ main div{
     padding: 0.4rem;
     margin: 1rem;
     width: 10rem;
+    height: 2.5rem;
     display: flex;
     align-items: center;
     justify-content: center;
 }
 
-.index_buttons a:hover{
+a.button:hover{
     background-color: rgba(0, 0, 255, 1);
+    text-decoration: underline;
 }
 
-.index_buttons a:active{
+a.button:active{
     background-color: rgba(0, 0, 200, 1);
+}
+
+.conversation form{
+    display: flex;
+    flex-direction: row;
+    position: sticky;
+}
+
+.message{
+    margin: 0.5rem;
+}
+
+.search_bar{
+    display: flex;
+    flex-direction: row;
 }
 
 footer{
@@ -102,6 +127,7 @@ a{
 p{
     font-family: 'Muli', sans-serif;
     font-size: 1rem;
+    margin: 0;
 }
 
 h1{
