@@ -1,6 +1,8 @@
 div class='search_bar'
-    input type="text" palceholder='Search...' 
-    img src="/media/search.svg"
+    form action='/search' method='post'
+        input type="text" palceholder='Search...' 
+        button type='submit'
+            img src="/media/search.svg"
 
 h1 Welcome back #{User.username_by_id(session[:user_id]).first.first}
 

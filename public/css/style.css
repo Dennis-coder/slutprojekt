@@ -50,22 +50,6 @@ main div{
     flex-direction: column;
 }
 
-.index{
-    height: 40rem;
-    justify-content: space-evenly;
-    background-image: url('/media/promo_pic.jpg');
-    background-repeat: no-repeat;
-    background-size: cover;
-}
-
-.login{
-    height: 30rem; 
-}
-
-.register{
-    height: 40rem;
-}
-
 .login form{
     height: 100%;
 }
@@ -75,42 +59,24 @@ main div{
     text-shadow: -1px -1px 0 #000, 1px -1px 0 #000, -1px 1px 0 #000, 1px 1px 0 #000;
 }
 
-a.button{
-    background-color: rgba(150, 150, 150, 1);
-    text-decoration: none;
-    color: white;
-    border-radius: 999rem;
-    padding: 0.4rem;
-    margin: 1rem;
-    width: 10rem;
-    height: 2.5rem;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-}
-
-a.button:hover{
-    background-color: rgba(0, 0, 255, 1);
-    text-decoration: underline;
-}
-
-a.button:active{
-    background-color: rgba(0, 0, 200, 1);
-}
-
 .conversation form{
     display: flex;
     flex-direction: row;
     position: sticky;
 }
 
-.message{
-    margin: 0.5rem;
-}
-
-.search_bar{
+.search_bar form{
     display: flex;
     flex-direction: row;
+    justify-content: center;
+}
+
+.search_bar form button{
+    width: 2.4rem;
+}
+
+.search_bar form input{
+    margin: 0;
 }
 
 footer{
@@ -138,6 +104,10 @@ h1{
 button{
     font-family: 'Muli', sans-serif;
     font-size: 1rem;
+    height: 2rem;
+    display: flex;
+    justify-content: center;
+    align-items: center;
 }
 
 span{
@@ -148,6 +118,60 @@ span{
 input{
     font-family: 'Muli', sans-serif;
     font-size: 1rem;
+    height: 1.625rem;
+}
+
+.button{
+    /* background-color: rgba(150, 150, 150, 1); */
+    text-decoration: none;
+    color: white;
+    border-radius: 999rem;
+    padding: 0.4rem;
+    margin: 1rem;
+    width: 10rem;
+    height: 2.5rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background-color: rgba(0, 0, 255, 1);
+}
+
+.button:hover{
+    text-decoration: underline;
+}
+
+.button:active{
+    background-color: rgba(0, 0, 150, 1);
+}
+
+.message{
+    margin: 1rem;
+}
+
+.search_bar{
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    margin: 0;
+}
+
+.index{
+    height: 40rem;
+    justify-content: space-evenly;
+    background-image: url('/media/promo_pic.jpg');
+    background-repeat: no-repeat;
+    background-size: cover;
+}
+
+.login{
+    height: 30rem; 
+}
+
+.input_space{
     margin-top: 0.2rem;
     margin-bottom: 1.2rem;
+}
+
+.register{
+    height: 40rem;
 }

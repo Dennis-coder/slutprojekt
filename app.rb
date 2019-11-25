@@ -5,7 +5,7 @@ class Application < Sinatra::Base
 	before do 
 		@db = SQLite3::Database.new('db/websnap.db')
 		@db.results_as_hash = true
-		session[:user_id] = 1
+		# session[:user_id] = 1
 	end
 
 	before '/home/?' do
