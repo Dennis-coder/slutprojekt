@@ -31,7 +31,7 @@ header div{
 }
 
 header img{
-    height: 5rem;
+    height: 4rem;
     padding: 1rem;
 }
 
@@ -87,7 +87,7 @@ footer{
 
 a{
     font-family: 'Muli', sans-serif;
-    font-size: 1.8rem;
+    font-size: 1.5rem;
 }
 
 p{
@@ -122,26 +122,24 @@ input{
 }
 
 .button{
-    /* background-color: rgba(150, 150, 150, 1); */
+    background-color: rgba(150, 150, 150, 1);
     text-decoration: none;
     color: white;
     border-radius: 999rem;
-    padding: 0.4rem;
-    margin: 1rem;
-    width: 10rem;
-    height: 2.5rem;
+    padding: 0.5rem 0;
+    width: 8rem;
     display: flex;
     align-items: center;
     justify-content: center;
-    background-color: rgba(0, 0, 255, 1);
 }
 
 .button:hover{
+    background-color: rgba(0, 0, 255, 1);
     text-decoration: underline;
 }
 
 .button:active{
-    background-color: rgba(0, 0, 150, 1);
+    background-color: rgba(0, 0, 170, 1);
 }
 
 .message{
@@ -167,7 +165,7 @@ input{
     height: 30rem; 
 }
 
-.input_space{
+.space{
     margin-top: 0.2rem;
     margin-bottom: 1.2rem;
 }

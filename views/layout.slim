@@ -12,7 +12,8 @@ html lang="en"
             div
                 -if session[:user_id] != nil
                     a class='button' href='/home' Home
-                    img src='/media/logo.png'
+                    a 
+                        img src='/media/logo.png'
                     a class='button' href='/logout' Logout
                 -else 
                     a class='button' href='/login' Login
@@ -25,3 +26,6 @@ html lang="en"
         footer 
             div
                 p WebSnap Inc.
+
+
+        script src="/js/script.js"

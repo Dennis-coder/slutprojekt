@@ -3,8 +3,6 @@ class Application < Sinatra::Base
     enable :sessions
 
 	before do 
-		@db = SQLite3::Database.new('db/websnap.db')
-		@db.results_as_hash = true
 		# session[:user_id] = 1
 	end
 
@@ -55,12 +53,12 @@ class Application < Sinatra::Base
 		end
 	end
 
-	get '/logout' do
+	get '/logout/?' do
 		session.delete(:user_id)
 		redirect '/'
 	end
 
-	get '/home' do
+	get '/home/?' do
 		friends_id = Friend.friendslist(session[:user_id])
 		@friends = []
 		unless friends_id.empty?
@@ -71,24 +69,33 @@ class Application < Sinatra::Base
 			end
 			@friends.first
 		end
-		slim :home
-		
+		slim :home	
 	end
 	
 	get '/friend/:username/?' do
-
-		recieved = Message.messages(session[:user_id], User.id_by_username(params[:username]))
-		sent = Message.messages(User.id_by_username(params[:username]), session[:user_id])
-		@messages = Sorter.messages(recieved, sent)
-		slim :conversation
-
+		messages = Message.conversation(session[:user_id], User.id_by_username(params[:username]))
+		# p @messages
+		slim :conversation, locals: {messages: messages}
 	end
 
 	post '/friend/:reciever/send' do
-
 		Message.send(params[:message], User.geotag_by_id(session[:user_id]), session[:user_id], User.id_by_username(params[:reciever]))
 		redirect "/friend/#{params[:reciever]}"
+	end
 
+	get '/api/v1/get/user_id' do
+		return session[:user_id].to_json
+	end
+
+	get '/api/v1/message/:message_id/sender' do
+		out = Message.sender_by_id(params[:message_id]).first.first
+		out = User.username_by_id(out).first.first
+		return out.to_json
+	end
+
+	get '/api/v1/users/:id/messages/:latest' do
+		messages = Message.new_messages(session[:user_id], params[:id], params[:latest]).reverse
+		return messages.to_json
 	end
 
 end

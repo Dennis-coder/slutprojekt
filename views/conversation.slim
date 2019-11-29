@@ -6,5 +6,7 @@ div class='conversation'
         br
         button type='submit' Send
 
-    -for message in @messages
-        == slim :'partials/message', locals: {message: message}
+    .messages
+
+        -for message in messages
+            == slim :'partials/message', locals: {message: message}
