@@ -8,19 +8,29 @@ html lang="en"
         link href="https://fonts.googleapis.com/css?family=Muli:400,700&display=swap" rel="stylesheet"
         title WebSnap
     body
+        nav class="menu"
+            a class="menuButton" href="/" Home
+            -if session['user_id'] == nil
+                a class="menuButton" href="/login" Login
+                a class="menuButton" href="/register" Register
+            -else 
+                a class="menuButton" href="/home/search" Find a friend
+                a class="menuButton" href="/home/new/chat" New conversation
+                a class="menuButton" href="/logout" Logout
+
         header
+            a class="" href="#" onclick="toggleMenu()"
+                img class="menuLogo" src="/media/menu.svg"
             div
-                -if session[:user_id] != nil
-                    a class='button' href='/home' Home
-                    a 
-                        img src='/media/logo.png'
-                    a class='button' href='/logout' Logout
-                -else 
+
+                -if session['user_id'] == nil
                     a class='button' href='/login' Login
-                    a href="/"
-                        img src='/media/logo.png'
                     a class='button' href='/register' Register
-        main
+
+            a href="/"
+                    img class="logo" src='/media/logo.png'
+
+        main class='space'
             == yield
 
         footer 

@@ -6,6 +6,7 @@ GEM
     listen (3.2.0)
       rb-fsevent (~> 0.10, >= 0.10.3)
       rb-inotify (~> 0.9, >= 0.9.10)
+    localtunnel (1.0.3)
     mustermann (1.0.3)
     rack (2.0.7)
     rack-protection (2.0.7)
@@ -33,6 +34,7 @@ PLATFORMS
 
 DEPENDENCIES
   bcrypt
+  localtunnel
   rerun
   sinatra
   slim

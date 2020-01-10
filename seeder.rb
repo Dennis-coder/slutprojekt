@@ -26,7 +26,6 @@ class Seeder
             CREATE TABLE "users" (
                 "id" INTEGER PRIMARY KEY AUTOINCREMENT,
                 "username" TEXT NOT NULL UNIQUE,
-                "email" TEXT NOT NULL,
                 "password_hash" TEXT NOT NULL,
                 "sign_up_date" TEXT NOT NULL,
                 "admin" INTEGER NOT NULL,
@@ -57,13 +56,13 @@ class Seeder
 
     def self.populate_tables(db)
         users = [
-            {username: "1", email: "1@gmail.com", password_hash: BCrypt::Password.create("1"), sign_up_date: "#{Time.now.utc}", admin: 1, geotag: "gothenburg"},
-            {username: "2", email: "2@gmail.com", password_hash: BCrypt::Password.create("2"), sign_up_date: "#{Time.now.utc}", admin: 0, geotag: "gothenburg"},
-            {username: "3", email: "3@gmail.com", password_hash: BCrypt::Password.create("3"), sign_up_date: "#{Time.now.utc}", admin: 0, geotag: "gothenburg"}
+            {username: "1", password_hash: BCrypt::Password.create("1"), sign_up_date: "#{Time.now.utc}", admin: 1, geotag: "gothenburg"},
+            {username: "2", password_hash: BCrypt::Password.create("2"), sign_up_date: "#{Time.now.utc}", admin: 0, geotag: "gothenburg"},
+            {username: "3", password_hash: BCrypt::Password.create("3"), sign_up_date: "#{Time.now.utc}", admin: 0, geotag: "gothenburg"}
         ]
 
         users.each do |user|
-            db.execute("INSERT INTO users (username, email, password_hash, sign_up_date, admin, geotag) VALUES(?,?,?,?,?,?)", user[:username], user[:email], user[:password_hash], user[:sign_up_date], user[:admin], user[:geotag])
+            db.execute("INSERT INTO users (username, password_hash, sign_up_date, admin, geotag) VALUES(?,?,?,?,?)", user[:username], user[:password_hash], user[:sign_up_date], user[:admin], user[:geotag])
         end
 
         messages = [

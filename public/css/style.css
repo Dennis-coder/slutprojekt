@@ -1,3 +1,4 @@
+/* General css */
 :root{
     --maxWidth: var(1000px)
 }
@@ -7,32 +8,9 @@ body{
     min-height: 100vh;
     margin: auto;
     display: flex;
-    align-items: center;
     justify-content: space-between;
     flex-direction: column;
     background-color: rgb(235, 235, 235);
-}
-
-header{
-    width: 100%;
-    background: rgb(240, 240, 0);
-    display: flex;
-    align-items: center;
-    justify-content: center;
-}
-
-header div{
-    max-width: 1000px;
-    width: 100%;
-    display: flex;
-    flex-direction: row;
-    align-items: center;
-    justify-content: space-around;
-}
-
-header img{
-    height: 4rem;
-    padding: 1rem;
 }
 
 main{
@@ -44,39 +22,9 @@ main{
 main div{
     max-width: 1000px;
     width: 100%;
-    margin: 2rem;
     display: flex;
     align-items: center;
     flex-direction: column;
-}
-
-.login form{
-    height: 100%;
-}
-
-.index h1{
-    color: white;
-    text-shadow: -1px -1px 0 #000, 1px -1px 0 #000, -1px 1px 0 #000, 1px 1px 0 #000;
-}
-
-.conversation form{
-    display: flex;
-    flex-direction: row;
-    position: sticky;
-}
-
-.search_bar form{
-    display: flex;
-    flex-direction: row;
-    justify-content: center;
-}
-
-.search_bar form button{
-    width: 2.4rem;
-}
-
-.search_bar form input{
-    margin: 0;
 }
 
 footer{
@@ -121,38 +69,108 @@ input{
     height: 1.625rem;
 }
 
+.space{
+    margin: 1rem 0;
+}
+
 .button{
-    background-color: rgba(150, 150, 150, 1);
+    background: radial-gradient(#d0d0d0, #808080);
     text-decoration: none;
     color: white;
     border-radius: 999rem;
-    padding: 0.5rem 0;
-    width: 8rem;
     display: flex;
     align-items: center;
     justify-content: center;
 }
 
 .button:hover{
-    background-color: rgba(0, 0, 255, 1);
+    background: radial-gradient(#0000f0, #0000a0);
     text-decoration: underline;
+    transition: all .3s ease;
 }
 
 .button:active{
-    background-color: rgba(0, 0, 170, 1);
+    background: radial-gradient(#0000c0, #000070);
 }
 
-.message{
-    margin: 1rem;
+.hidden{
+    display: none;
 }
 
-.search_bar{
+
+/* Header css */
+header{
+    height: 6rem;
+    width: 100%;
+    background: rgb(240, 240, 0);
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+
+header a{
+    margin: 0 2rem;
+}
+
+header div{
+    max-width: 1000px;
+    width: auto;
     display: flex;
     flex-direction: row;
-    justify-content: center;
-    margin: 0;
+    align-items: center;
+    justify-content: space-between;
 }
 
+header .logo{
+    height: 4rem;
+    align-self: center;
+    justify-self: center;
+}
+
+header .button{
+    width: 8rem;
+    height: 2.5rem;
+}
+
+
+/* Menu css */
+.menu{
+    background-color: rgba(0, 0, 0, 0.4);
+    display: flex;
+    /* flex-direction: column; */
+}
+
+.menuLogo{
+    height: 3rem;
+}
+
+nav{
+    margin-top: 6rem;
+    height: auto;
+    width: 18rem;
+    position: absolute;
+    flex-direction: column;
+    z-index: 100;
+    transform: translate3d(-20rem, 0, 0);
+    transition: all 0.8s;
+    padding: 1rem;
+}
+
+nav.show{
+    transform: translate3d(0, 0, 0);
+    transition: all 0.8s;
+}
+
+.menuButton{
+    color: white;
+    text-decoration: none;
+}
+
+.menuButton:hover{
+    text-decoration: underline;
+}
+
+/* Index css */
 .index{
     height: 40rem;
     justify-content: space-evenly;
@@ -161,15 +179,73 @@ input{
     background-size: cover;
 }
 
+.index h1{
+    color: white;
+    text-shadow: -1px -1px 0 #000, 1px -1px 0 #000, -1px 1px 0 #000, 1px 1px 0 #000;
+}
+
+
+/* Login css & Register css */
+.login form{
+    height: 100%;
+}
+
 .login{
     height: 30rem; 
 }
 
-.space{
-    margin-top: 0.2rem;
-    margin-bottom: 1.2rem;
-}
-
 .register{
     height: 40rem;
+}
+
+
+/* Home css */
+.home{
+    flex-direction: row;
+    align-items: flex-start;
+    justify-content: space-evenly;
+}
+
+.home_button img{
+    height: 2.5rem;
+    padding: 0.5rem;
+}    
+
+aside{
+    width: 200px;
+}  
+
+
+/* Conversation css */
+.message{
+    margin: 1rem;
+}
+
+.conversation form{
+    display: flex;
+    flex-direction: row;
+    position: sticky;
+}
+
+
+/* Search css */
+.search_bar{
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    margin: 0;
+}
+
+.search_bar form{
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+}
+
+.search_bar form button{
+    width: 2.4rem;
+}
+
+.search_bar form input{
+    margin: 0;
 }

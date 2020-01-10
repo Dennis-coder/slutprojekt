@@ -1,5 +1,5 @@
 async function timer(id, latest){
-	setTimeout(showMessages(id, latest), 500)
+	setTimeout(showMessages(id, latest), 500);
 }
 
 function showMessages(id, latest) {
@@ -8,18 +8,18 @@ function showMessages(id, latest) {
 		messages.forEach(message => {
 			getUserId().then((userId) => {
 				getSenderUsername(message[0]).then((sender) => {
-					console.log(sender)
-					console.log(userId)
-					messageDiv = `<div class="message">`
+					console.log(sender);
+					console.log(userId);
+					messageDiv = `<div class="message">`;
 					if (message[3] == userId){
-						messageDiv += `<p>Me:</p>`
+						messageDiv += `<p>Me:</p>`;
 					}
 					else{
-						messageDiv += `<p>${sender}</p>`
+						messageDiv += `<p>${sender}</p>`;
 					}
-					messageDiv +=  `<p>${message[1]}</p>`
-					messageDiv +=  `<p>Sent at ${message[2]}</p></div>`
-					messagesDiv.innerHTML = messageDiv + messagesDiv.innerHTML
+					messageDiv +=  `<p>${message[1]}</p>`;
+					messageDiv +=  `<p>Sent at ${message[2]}</p></div>`;
+					messagesDiv.innerHTML = messageDiv + messagesDiv.innerHTML;
 				})
 			})
 		});
@@ -41,4 +41,8 @@ async function getUserId() {
 async function getSenderUsername(id) {
 	const response = await fetch(`http://localhost:9292/api/v1/message/${id}/sender`);
 	return await response.json();
+}
+
+function toggleMenu() {
+    document.querySelector("nav").classList.toggle("show")
 }

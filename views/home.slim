@@ -1,11 +1,6 @@
-div class='search_bar'
-    form class='space' action='/search' method='post'
-        input type="text" palceholder='Search...' 
-        button type='submit'
-            img src="/media/search.svg"
+div class='home'
+    div 
+        h1 Welcome back #{@user.username}
 
-h1 Welcome back #{User.username_by_id(session[:user_id]).first.first}
-
-
--for friend in @friends
-    == slim :'partials/friend_card', locals: {friend: friend}
+        -for friend in friends
+            == slim :'partials/friend_card', locals: {friend: friend}

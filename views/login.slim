@@ -1,16 +1,14 @@
 div class='login'
     h1 Log in to your account
     
-    p = session[:login_error]
-    -session.delete(:login_error)
+    p = session['login_error']
+    -session.delete('login_error')
 
     form action="/login" method='post'
-        span Username
-        br
-        input class='space' type='text' name='username'
-        br
-        span  Password
-        br
-        input class='space' type='password' name='plaintext'
-        br
+        div class='space'
+            span Username
+            input type='text' name='username'
+        div class='space'
+            span  Password
+            input type='password' name='plaintext'
         button type='submit' Login

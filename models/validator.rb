@@ -1,26 +1,31 @@
 class Validator
 
-    def self.login(username, plaintext)
-        user_id = User.id_by_username(username).first
-
+    def self.login(params)
+        username = params['username']
+        plaintext = params['plaintext']
+        user = User.new(nil, username)
+        user_id = user.id   
 		if user_id == nil
 			return "No account with that name"
         end
-        
-        user_id.first
-		password = User.password_by_id(user_id).first.first
-        password = BCrypt::Password.new(password)
-        
-        if password == plaintext
-			return user_id.first
+        if BCrypt::Password.new(user.password_hash) == plaintext
+			return user_id
 		else
 			return "Wrong password"
 		end
     end
 
-    def self.register(username, plaintext, plaintext_confirm)
-        if User.id_by_username(username).first != nil
-			return "A user with that name already exists"
+    def self.register(params)
+        username = params['username']
+        plaintext = params['plaintext']
+        plaintext_confirm = params['plaintext_confirm']
+        user = User.new(nil, username)
+        if user.username != nil
+            return "A user with that name already exists"
+        elsif username.length < 5
+            return "Username has to be 5 characters"
+        elsif plaintext.length < 5
+            return "Password has to be 5 characters"
 		elsif plaintext != plaintext_confirm
 			return "Passwords are not the same"
         else

@@ -1,0 +1,9 @@
+div 
+    div class='search_bar'
+        form class='space' action='/home/search' method='get'
+            input type="text" placeholder='Search...' name='search_term'
+            button type="submit"
+                img src="/media/search.svg"
+    -if results != nil
+        -for result in results
+            == slim :'partials/user_card', locals {user: result}

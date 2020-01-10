@@ -1,25 +1,17 @@
 div class='register'
     h1 Create an account
-    p = session[:register_error]
+    p = session['register_error']
     form action="/register" method='post'
-        span Email
-        br
-        input class='space' type='text' name='email'
-        br
-        span Username
-        br
-        input class='space' type='text' name='username'
-        br
-        span  Password
-        br
-        input class='space' type='password' name='plaintext'
-        br
-        span Confirm password
-        br
-        input class='space' type='password' name='plaintext_confirm'
-        br
-        span Location
-        br
-        input class='space' type='text' name='geotag'
-        br
+        div class='space'
+            span Username
+            input type='text' name='username'
+        div class='space'
+            span  Password
+            input type='password' name='plaintext'
+        div class='space'
+            span Confirm password
+            input type='password' name='plaintext_confirm'
+        div class='space'
+            span Location
+            input type='text' name='geotag'
         button type='submit' Register

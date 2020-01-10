@@ -7,18 +7,25 @@ class Application < Sinatra::Base
 	end
 
 	before '/home/?' do
-		if session[:user_id] == nil
+		if session['user_id'] == nil
 			redirect '/'
+		else
+			@user = User.new(session['user_id'])
 		end
 	end
 
-	before '/friend/*' do
-		if session[:user_id] == nil
+	before '/home/*' do
+		if session['user_id'] == nil
 			redirect '/'
+		else
+			@user = User.new(session['user_id'])
 		end
 	end
 	
-    get '/?' do
+	get '/?' do
+		if session['user_id'] != nil
+			redirect '/home'
+		end
         slim :index
     end
 
@@ -27,12 +34,12 @@ class Application < Sinatra::Base
     end
 
 	post '/login' do
-		returned = Validator.login(params[:username], params[:plaintext])
+		returned = Validator.login(params)
 		if returned.is_a? Integer
-			session[:user_id] = returned
+			session['user_id'] = returned
 			redirect '/home'
 		else
-			session[:login_error] = returned
+			session['login_error'] = returned
 			redirect '/login'
 		end
 	end
@@ -42,59 +49,64 @@ class Application < Sinatra::Base
 	end
 
 	post '/register' do
-		returned = Validator.register(params[:username], params[:plaintext], params[:plaintext_confirm])
+		returned = Validator.register(params)
 		if returned == true
-			User.add(params[:username], params[:email], params[:plaintext], params[:geotag])
-			session[:user_id] = User.id_by_username(params[:username])
+			User.add(params)
+			session['user_id'] = user.id
 			redirect '/home'
 		else
-			session[:register_error] = returned
+			session['register_error'] = returned
 			redirect '/register'
 		end
 	end
 
 	get '/logout/?' do
-		session.delete(:user_id)
+		session.delete('user_id')
 		redirect '/'
 	end
 
 	get '/home/?' do
-		friends_id = Friend.friendslist(session[:user_id])
-		@friends = []
-		unless friends_id.empty?
-    		friends_id.each do |friend_id|
-        		friend = User.username_by_id(friend_id)
-        		friend << Friend.last_interaction(session[:user_id], friend_id).first
-				@friends << friend
-			end
-			@friends.first
-		end
-		slim :home	
+		friends = @user.friendslist
+		slim :home, locals: {friends: friends}
 	end
 	
-	get '/friend/:username/?' do
-		messages = Message.conversation(session[:user_id], User.id_by_username(params[:username]))
-		# p @messages
+	get '/home/friend/:username/?' do
+		messages = Message.conversation(session['user_id'], 
+		User.id_by_username(params['username']))
 		slim :conversation, locals: {messages: messages}
 	end
 
-	post '/friend/:reciever/send' do
-		Message.send(params[:message], User.geotag_by_id(session[:user_id]), session[:user_id], User.id_by_username(params[:reciever]))
-		redirect "/friend/#{params[:reciever]}"
+	post '/home/friend/:reciever/send' do
+		Message.send(params['message'], User.geotag(session['user_id']), session['user_id'], User.id_by_username(params['reciever']))
+		redirect "/home/friend/#{params['reciever']}"
+	end
+	
+	get '/home/search/?' do
+		slim :search, locals: {results: nil}
+	end
+
+	get '/home/search/:search_term/?' do
+
+
+
+	end
+
+	get '/home/new/chat/?' do
+		slim :newChat
 	end
 
 	get '/api/v1/get/user_id' do
-		return session[:user_id].to_json
+		return session['user_id'].to_json
 	end
 
 	get '/api/v1/message/:message_id/sender' do
-		out = Message.sender_by_id(params[:message_id]).first.first
-		out = User.username_by_id(out).first.first
+		out = Message.sender(params['message_id']).first.first
+		out = User.username(out).first.first
 		return out.to_json
 	end
 
 	get '/api/v1/users/:id/messages/:latest' do
-		messages = Message.new_messages(session[:user_id], params[:id], params[:latest]).reverse
+		messages = Message.new_messages(session['user_id'], params['id'], params['latest']).reverse
 		return messages.to_json
 	end
 
