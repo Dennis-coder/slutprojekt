@@ -1,17 +1,17 @@
 class Sorter
 
-    def message_compare(message1, message2)
-        message1['timestamp'].each_char.with_index do |message, index|
-            if message > message2['timestamp'][index]
+    def self.message_compare(message1, message2)
+        message1.timestamp.each_char.with_index do |message, index|
+            if message > message2.timestamp[index]
                 return message1
-            elsif message < message2['timestamp'][index]
+            elsif message < message2.timestamp[index]
                 return message2
             end
         end
         return message1
     end
 
-    def timestamp_compare(time1, time2)
+    def self.timestamp_compare(time1, time2)
         time1.each_char.with_index do |time, index|
             if time > time2[index]
                 return time1
@@ -21,7 +21,7 @@ class Sorter
         end
     end
 
-    def timestamp_sort(list)
+    def self.timestamp_sort(list)
         temp = list.dup
         out = []
         while temp.length > 0
@@ -37,7 +37,7 @@ class Sorter
         return out
     end
 
-    def messages(list1, list2)
+    def self.messages(list1, list2)
         list1 = Sorter.timestamp_sort(list1)
         list2 = Sorter.timestamp_sort(list2)
         messages = []

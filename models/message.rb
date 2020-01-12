@@ -1,7 +1,9 @@
 class Message < DBEntity
 
-    def initialize(id1, id2)
-        properties = self.properties(id1, id2)
+    attr_accessor :id, :text, :reciever_id, :sender_id, :timestamp
+
+    def initialize(id)
+        properties = self.properties(id)
         if properties != nil
             @id = properties['id']
             @text = properties['text']
@@ -11,22 +13,31 @@ class Message < DBEntity
         end
     end
 
-    def self.send(text, geotag, sender_id, reciever_id)
-        db.execute("INSERT INTO messages (text, image, timestamp, geotag, status, sender_id, reciever_id) VALUES(?,?,?,?,?,?,?)", text, "", "#{Time.now.utc}", geotag, 1, sender_id, reciever_id)
+    def properties(id)
+        db.execute('SELECT id,text,reciever_id,sender_id,timestamp FROM messages WHERE id = ?', id).first
+    end
+
+    def self.send(params, user)
+        db.execute("INSERT INTO messages (text, image, timestamp, geotag, status, sender_id, reciever_id) VALUES(?,?,?,?,?,?,?)", params['message'], "", "#{Time.now.utc}", user.geotag, 1, user.id, params['reciever'])
     end
 
     def self.messages(id1, id2)
         hash_list = db.execute("SELECT id FROM messages WHERE reciever_id = ? AND sender_id = ?", id1, id2)
         list = []
         hash_list.each do |hash|
-            list << Message.new(hash['friends_id'])
+            list << Message.new(hash['id'])
         end
         return list
     end
 
     def self.conversation(id1, id2)
         recieved = self.messages(id1, id2)
-		sent = self.messages(id2, id1)
+        sent = self.messages(id2, id1)
+        p ""
+        p recieved
+        p ''
+        p sent
+        p ''
         messages = Sorter.messages(recieved, sent)
         return messages
     end

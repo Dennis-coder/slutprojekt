@@ -3,13 +3,12 @@ class Validator
     def self.login(params)
         username = params['username']
         plaintext = params['plaintext']
-        user = User.new(nil, username)
-        user_id = user.id   
-		if user_id == nil
+        user = User.new(nil, username) 
+		if user.id == nil
 			return "No account with that name"
         end
         if BCrypt::Password.new(user.password_hash) == plaintext
-			return user_id
+			return user.id
 		else
 			return "Wrong password"
 		end

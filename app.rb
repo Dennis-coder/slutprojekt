@@ -71,13 +71,12 @@ class Application < Sinatra::Base
 	end
 	
 	get '/home/friend/:username/?' do
-		messages = Message.conversation(session['user_id'], 
-		User.id_by_username(params['username']))
+		messages = Message.conversation(session['user_id'], User.just_id(params['username']))
 		slim :conversation, locals: {messages: messages}
 	end
 
 	post '/home/friend/:reciever/send' do
-		Message.send(params['message'], User.geotag(session['user_id']), session['user_id'], User.id_by_username(params['reciever']))
+		Message.send(params, @user)
 		redirect "/home/friend/#{params['reciever']}"
 	end
 	

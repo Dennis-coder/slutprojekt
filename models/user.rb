@@ -11,20 +11,20 @@ class User < DBEntity
             @admin = properties['admin']
             @geotag = properties['geotag']
             @signupdate = properties['signupdate']
-            @friendslist = self.friends_list()
+            @friendslist = friends_list()
         end
     end
     
     def properties(id, username)
         if username == nil
-            self.db.execute("SELECT * FROM users WHERE id = ?", id).first
+            db.execute("SELECT * FROM users WHERE id = ?", id).first
         elsif id == nil
-            self.db.execute("SELECT * FROM users WHERE username = ?", username).first
+            db.execute("SELECT * FROM users WHERE username = ?", username).first
         end
     end
 
     def friends_list()
-        hash_list = self.db.execute("SELECT friends_id FROM friends WHERE user_id = ?", @id)
+        hash_list = db.execute("SELECT friends_id FROM friends WHERE user_id = ?", @id)
         list = []
         hash_list.each do |hash|
             list << Friend.new(hash['friends_id'])
@@ -33,7 +33,7 @@ class User < DBEntity
     end
 
     def messages(id)
-        hash_list = self.db.execute("SELECT id FROM messages WHERE reciever_id = ? OR sender_id = ?", @id, @id)
+        hash_list = db.execute("SELECT id FROM messages WHERE reciever_id = ? OR sender_id = ?", @id, @id)
         list = []
         hash_list.each do |hash|
             list << Message.new(hash['friends_id'])
@@ -41,8 +41,12 @@ class User < DBEntity
         return list
     end
     
-    def self.id_by_username(username)
-        db.execute("SELECT id FROM users WHERE username = ?", username)
+    def self.just_id(username)
+        db.execute("SELECT id FROM users WHERE username = ?", username).first['id']
+    end
+
+    def self.just_username(id)
+        db.execute("SELECT username FROM users WHERE id = ?", id).first['username']
     end
 
     def self.add(params)
