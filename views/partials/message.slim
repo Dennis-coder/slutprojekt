@@ -1,7 +1,0 @@
-div class='message'
-    -if message.sender_id == session['user_id']
-        p Me:
-    -else 
-        p= "#{User.just_username(message.sender_id)}:"
-    p= "#{message.text}"
-    p= "Sent at #{message.timestamp}"

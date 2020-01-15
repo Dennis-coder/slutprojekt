@@ -18,7 +18,7 @@ class Message < DBEntity
     end
 
     def self.send(params, user)
-        db.execute("INSERT INTO messages (text, image, timestamp, geotag, status, sender_id, reciever_id) VALUES(?,?,?,?,?,?,?)", params['message'], "", "#{Time.now.utc}", user.geotag, 1, user.id, params['reciever'])
+        db.execute("INSERT INTO messages (text, image, timestamp, status, sender_id, reciever_id) VALUES(?,?,?,?,?,?)", params['message'], "", "#{Time.now.utc}", 1, user.id, params['reciever'])
     end
 
     def self.messages(id1, id2)
@@ -33,11 +33,6 @@ class Message < DBEntity
     def self.conversation(id1, id2)
         recieved = self.messages(id1, id2)
         sent = self.messages(id2, id1)
-        p ""
-        p recieved
-        p ''
-        p sent
-        p ''
         messages = Sorter.messages(recieved, sent)
         return messages
     end

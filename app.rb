@@ -52,7 +52,7 @@ class Application < Sinatra::Base
 		returned = Validator.register(params)
 		if returned == true
 			User.add(params)
-			session['user_id'] = user.id
+			session['user_id'] = User.just_id(params['username'])
 			redirect '/home'
 		else
 			session['register_error'] = returned
@@ -66,7 +66,7 @@ class Application < Sinatra::Base
 	end
 
 	get '/home/?' do
-		friends = @user.friendslist
+		friends = @user.friends_list
 		slim :home, locals: {friends: friends}
 	end
 	
@@ -81,17 +81,31 @@ class Application < Sinatra::Base
 	end
 	
 	get '/home/search/?' do
-		slim :search, locals: {results: nil}
+		results = Friend.pending_requests(@user.id)
+		slim :search, locals: {results: results}
+	end
+
+	post '/home/search' do
+		redirect "/home/search/#{params['search_term']}"
 	end
 
 	get '/home/search/:search_term/?' do
+		results = Search.find_friends(params['search_term'])
+		slim :search, locals: {results: results}
+	end
 
+	post '/home/:user_id/add' do
+		Friend.send_request(@user.id, params['user_id'])
+		redirect "/home/search/#{params['search_term']}"
+	end
 
-
+	post '/home/:user_id/accept' do
+		Friend.accept_request(@user.id, params['user_id'])
+		redirect "/home/search/#{params['search_term']}"
 	end
 
 	get '/home/new/chat/?' do
-		slim :newChat
+		slim :new_chat
 	end
 
 	get '/api/v1/get/user_id' do

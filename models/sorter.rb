@@ -1,22 +1,11 @@
 class Sorter
 
-    def self.message_compare(message1, message2)
-        message1.timestamp.each_char.with_index do |message, index|
-            if message > message2.timestamp[index]
-                return message1
-            elsif message < message2.timestamp[index]
-                return message2
-            end
-        end
-        return message1
-    end
-
     def self.timestamp_compare(time1, time2)
         time1.each_char.with_index do |time, index|
             if time > time2[index]
-                return time1
+                return true
             elsif time < time2[index]
-                return time2
+                return false
             end
         end
     end
@@ -27,7 +16,7 @@ class Sorter
         while temp.length > 0
             latest_index = 0
             temp.each_with_index do |item, index|
-                if temp[latest_index] != Sorter.message_compare(temp[latest_index], item)
+                if Sorter.timestamp_compare(temp[latest_index].timestamp, item.timestamp) == false
                     latest_index = index
                 end
             end
@@ -42,11 +31,11 @@ class Sorter
         list2 = Sorter.timestamp_sort(list2)
         messages = []
         while list1.length > 0 && list2.length > 0
-            message = Sorter.message_compare(list1.first, list2.first)
-            messages << message
-            if message == list1.first
+            if Sorter.timestamp_compare(list1.first.timestamp, list2.first.timestamp) == true
+                messages << list1.first
                 list1.delete_at(0)
             else
+                messages << list2.first
                 list2.delete_at(0)
             end
         end
@@ -60,6 +49,12 @@ class Sorter
             end
         end
         return messages
+    end
+
+    def self.search(users)
+        out = users
+
+        return out
     end
 
 end

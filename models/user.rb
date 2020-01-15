@@ -1,6 +1,6 @@
 class User < DBEntity
 
-    attr_accessor :id, :username, :password_hash, :password_hash, :admin, :geotag, :sign_up_date, :friendslist
+    attr_accessor :id, :username, :password_hash, :password_hash, :admin, :sign_up_date
 
     def initialize(id=nil, username=nil)
         properties = self.properties(id, username)
@@ -9,9 +9,7 @@ class User < DBEntity
             @username = properties['username']
             @password_hash = properties['password_hash']
             @admin = properties['admin']
-            @geotag = properties['geotag']
             @signupdate = properties['signupdate']
-            @friendslist = friends_list()
         end
     end
     
@@ -24,11 +22,16 @@ class User < DBEntity
     end
 
     def friends_list()
-        hash_list = db.execute("SELECT friends_id FROM friends WHERE user_id = ?", @id)
+        hash_list = db.execute("SELECT id, user_id, user2_id FROM friends WHERE (user_id = ? OR user2_id = ?) AND status = ?", @id, @id, 0)
         list = []
         hash_list.each do |hash|
-            list << Friend.new(hash['friends_id'])
+            if hash['user_id'] == @id
+                list << Friend.new(hash['user2_id'], hash['id'])
+            else
+                list << Friend.new(hash['user_id'], hash['id'])
+            end
         end
+        Debug.put(list)
         return list
     end
 
@@ -49,8 +52,12 @@ class User < DBEntity
         db.execute("SELECT username FROM users WHERE id = ?", id).first['username']
     end
 
+    def self.all
+        db.execute("SELECT id FROM users")
+    end
+
     def self.add(params)
-        db.execute("INSERT INTO users (username, password_hash, sign_up_date, admin, geotag) VALUES(?,?,?,?,?)", params['username'], BCrypt::Password.create(params['plaintext']), "#{Time.now}", 0, params['geotag'])
+        db.execute("INSERT INTO users (username, password_hash, sign_up_date, admin) VALUES(?,?,?,?)", params['username'], BCrypt::Password.create(params['plaintext']), "#{Time.now.utc}", 0)
     end
     
 end

@@ -2,7 +2,7 @@ class Randoms
 
     def self.match?(term, user)
         length = term.length
-        i = 0
+        matched = 0
         user.each_char do |char|
             if char = term[i]
                 i += 1

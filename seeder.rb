@@ -28,8 +28,7 @@ class Seeder
                 "username" TEXT NOT NULL UNIQUE,
                 "password_hash" TEXT NOT NULL,
                 "sign_up_date" TEXT NOT NULL,
-                "admin" INTEGER NOT NULL,
-                "geotag" TEXT NOT NULL
+                "admin" INTEGER NOT NULL
             );
         SQL
         db.execute <<-SQL
@@ -38,7 +37,6 @@ class Seeder
                 "text" TEXT NOT NULL,
                 "image" TEXT,
                 "timestamp" TEXT NOT NULL,
-                "geotag" TEXT NOT NULL,
                 "status" INTEGER NOT NULL,
                 "sender_id" INTEGER NOT NULL,
                 "reciever_id" INTEGER NOT NULL
@@ -46,8 +44,10 @@ class Seeder
         SQL
         db.execute <<-SQL
             CREATE TABLE "friends" (
+                "id" INTEGER PRIMARY KEY AUTOINCREMENT,
                 "user_id" INTEGER NOT NULL,
-                "friends_id" INTEGER NOT NULL,
+                "user2_id" INTEGER NOT NULL,
+                "status" INTEGER NOT NULL,
                 "last_interaction" TEXT NOT NULL,
                 "friends_since" TEXT NOT NULL
             );
@@ -56,35 +56,33 @@ class Seeder
 
     def self.populate_tables(db)
         users = [
-            {username: "1", password_hash: BCrypt::Password.create("1"), sign_up_date: "#{Time.now.utc}", admin: 1, geotag: "gothenburg"},
-            {username: "2", password_hash: BCrypt::Password.create("2"), sign_up_date: "#{Time.now.utc}", admin: 0, geotag: "gothenburg"},
-            {username: "3", password_hash: BCrypt::Password.create("3"), sign_up_date: "#{Time.now.utc}", admin: 0, geotag: "gothenburg"}
+            {username: "1", password_hash: BCrypt::Password.create("1"), sign_up_date: "#{Time.now.utc}", admin: 1},
+            {username: "2", password_hash: BCrypt::Password.create("2"), sign_up_date: "#{Time.now.utc}", admin: 0},
+            {username: "3", password_hash: BCrypt::Password.create("3"), sign_up_date: "#{Time.now.utc}", admin: 0}
         ]
 
         users.each do |user|
-            db.execute("INSERT INTO users (username, password_hash, sign_up_date, admin, geotag) VALUES(?,?,?,?,?)", user[:username], user[:password_hash], user[:sign_up_date], user[:admin], user[:geotag])
+            db.execute("INSERT INTO users (username, password_hash, sign_up_date, admin) VALUES(?,?,?,?)", user[:username], user[:password_hash], user[:sign_up_date], user[:admin])
         end
 
         messages = [
-            {text: "Message test 1", image: "", geotag: "gothenburg", status: 1, sender_id: 3, reciever_id: 1},
-            {text: "Message test 2", image: "", geotag: "gothenburg", status: 1, sender_id: 2, reciever_id: 1},
-            {text: "Message test 3", image: "", geotag: "gothenburg", status: 1, sender_id: 2, reciever_id: 1},
-            {text: "Message test 4", image: "", geotag: "gothenburg", status: 1, sender_id: 2, reciever_id: 1}
+            {text: "Message test 1", image: "", status: 1, sender_id: 3, reciever_id: 1},
+            {text: "Message test 2", image: "", status: 1, sender_id: 2, reciever_id: 1},
+            {text: "Message test 3", image: "", status: 1, sender_id: 2, reciever_id: 1},
+            {text: "Message test 4", image: "", status: 1, sender_id: 2, reciever_id: 1}
         ]
 
         messages.each do |message|
-            Message.send(message[:text], message[:geotag], message[:sender_id], message[:reciever_id])
+            db.execute("INSERT INTO messages (text, image, timestamp, status, sender_id, reciever_id) VALUES(?,?,?,?,?,?)", message[:text], "", "#{Time.now.utc}", 1, message[:sender_id], message[:reciever_id])
         end
 
         friends = [
-            {user_id: 1, friends_id: 2, last_interaction: "#{Time.now.utc}", friends_since: "#{Time.now.utc}"},
-            {user_id: 2, friends_id: 1, last_interaction: "#{Time.now.utc}", friends_since: "#{Time.now.utc}"},
-            {user_id: 1, friends_id: 3, last_interaction: "#{Time.now.utc}", friends_since: "#{Time.now.utc}"},
-            {user_id: 3, friends_id: 1, last_interaction: "#{Time.now.utc}", friends_since: "#{Time.now.utc}"}
+            {user_id: 1, user2_id: 2, status: 0, last_interaction: "#{Time.now.utc}", friends_since: "#{Time.now.utc}"},
+            {user_id: 3, user2_id: 1, status: 1, last_interaction: "#{Time.now.utc}", friends_since: "#{Time.now.utc}"}
         ]
 
         friends.each do |friend|
-            db.execute("INSERT INTO friends (user_id, friends_id, last_interaction, friends_since) VALUES(?,?,?,?)", friend[:user_id], friend[:friends_id], friend[:last_interaction], friend[:friends_since])
+            db.execute("INSERT INTO friends (user_id, user2_id, status, last_interaction, friends_since) VALUES(?,?,?,?,?)", friend[:user_id], friend[:user2_id], friend[:status], friend[:last_interaction], friend[:friends_since])
         end
     end
 

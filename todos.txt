@@ -1,0 +1,4 @@
+sorter.rb - while loop i self.messages
+          - fixa en search results sorter
+
+övrigt - man kan lägga till sig själv som vän
