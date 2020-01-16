@@ -1,10 +1,10 @@
 div 
     div class='search_bar'
-        form class='space' action='/home/search' method='post'
+        form class='space' action='/home/find_user' method='post'
             input type="text" placeholder='Search...' name='search_term'
             button type="submit"
                 img src="/media/search.svg"
-    -if results == nil
+    -if results == nil || results == []
         p No results
     -else
         -for result in results
@@ -12,15 +12,17 @@ div
                 h1= "#{result.username}"
                 -status = Friend.status?(result.id, @user.id)
                 -if status == "friends"
-                    form action='/home/search/#{result.id}/delete' method='post'
+                    form action='/home/requests/#{result.id}/delete' method='post'
                         button type='submit' Already friends
                 -elsif status == "pending"
                     -if Friend.sender(@user.id, result.id) == @user.id
-                        form action='/home/search/#{result.id}/delete' method='post'
+                        form action='/home/requests/#{result.id}/delete' method='post'
                             button type='submit' Pending request
                     -else
-                        form action='/home/#{result.id}/accept' method='post'
-                            button type='submit' Add friend
+                        form action='/home/requests/#{result.id}/accept' method='post'
+                            button type='submit' Accept
+                        form action='/home/requests/#{result.id}/delete' method='post'
+                            button type='submit' Decline
                 -else
-                    form action='/home/#{result.id}/add' method='post'
+                    form action='/home/requests/#{result.id}/send' method='post'
                         button type='submit' Send friend request

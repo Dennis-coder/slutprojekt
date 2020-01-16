@@ -8,15 +8,16 @@ class Sorter
                 return false
             end
         end
+        return true
     end
 
-    def self.timestamp_sort(list)
+    def self.last_interaction(list)
         temp = list.dup
         out = []
         while temp.length > 0
             latest_index = 0
             temp.each_with_index do |item, index|
-                if Sorter.timestamp_compare(temp[latest_index].timestamp, item.timestamp) == false
+                if Sorter.timestamp_compare(temp[latest_index].last_interaction, item.last_interaction) == false
                     latest_index = index
                 end
             end
@@ -27,8 +28,6 @@ class Sorter
     end
 
     def self.messages(list1, list2)
-        list1 = Sorter.timestamp_sort(list1)
-        list2 = Sorter.timestamp_sort(list2)
         messages = []
         while list1.length > 0 && list2.length > 0
             if Sorter.timestamp_compare(list1.first.timestamp, list2.first.timestamp) == true
@@ -49,6 +48,22 @@ class Sorter
             end
         end
         return messages
+    end
+
+    def self.friendslist(list)
+        temp = list.dup
+        out = []
+        while temp.length > 0
+            latest_index = 0
+            temp.each_with_index do |item, index|
+                if Sorter.timestamp_compare(temp[latest_index].last_interaction, item.last_interaction) == false
+                    latest_index = index
+                end
+            end
+            out << temp[latest_index]
+            temp.delete_at(latest_index)
+        end
+        return out
     end
 
     def self.search(users)

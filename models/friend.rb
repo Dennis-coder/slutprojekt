@@ -51,6 +51,10 @@ class Friend < DBEntity
         return nil
     end
 
+    def self.delete(user_id, user2_id)
+        db.execute("DELETE FROM friends WHERE id = ?", Friend.relation_id(user_id, user2_id))
+    end
+
     def self.status?(user_id, user2_id)
         temp = db.execute("SELECT status FROM friends WHERE user_id = ? AND user2_id = ?", user_id, user2_id).first
         if temp != nil
@@ -60,7 +64,7 @@ class Friend < DBEntity
                 return "pending"
             end
         end
-        temp = db.execute("SELECT status FROM friends WHERE user_id = ? AND user2_id = ?", user_id, user2_id).first
+        temp = db.execute("SELECT status FROM friends WHERE user_id = ? AND user2_id = ?", user2_id, user_id).first
         if temp != nil
             if temp['status'] == 0
                 return "friends"

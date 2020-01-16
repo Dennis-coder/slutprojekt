@@ -1,7 +1,7 @@
 div class='conversation'
     h1 Your conversation with #{params['username']}
     
-    form class='send_message' action="/home/friend/#{params['username']}/send" method='post'
+    form class='send_message' action="/home/friends/#{params['username']}/send" method='post'
         input type='text' name='message'
         br
         button type='submit' Send

@@ -1,9 +1,13 @@
 div class='home'
     div 
-        h1 Welcome back #{@user.username}
+        div class='search_bar'
+            form class='space' action='/home/friends/search' method='post'
+                input type="text" placeholder='Search...' name='search_term'
+                button type="submit"
+                    img src="/media/search.svg"
 
         -for friend in friends
             div class='friend space'
-                a class='friend' href="/home/friend/#{friend.username}"
+                a href="/home/friends/#{friend.username}"
                     h1= "#{friend.username}"
                     span= friend.last_interaction

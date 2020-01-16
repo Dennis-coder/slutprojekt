@@ -70,41 +70,57 @@ class Application < Sinatra::Base
 		slim :home, locals: {friends: friends}
 	end
 	
-	get '/home/friend/:username/?' do
+	get '/home/friends/:username/?' do
 		messages = Message.conversation(session['user_id'], User.just_id(params['username']))
 		slim :conversation, locals: {messages: messages}
 	end
 
-	post '/home/friend/:reciever/send' do
+	post '/home/friends/:reciever/send' do
 		Message.send(params, @user)
-		redirect "/home/friend/#{params['reciever']}"
+		redirect "/home/friends/#{params['reciever']}"
+	end
+
+	post '/home/friends/search' do
+		redirect "/home/friends/search/#{params['search_term']}"
+	end
+
+	get '/home/friends/search/:term/?' do
+		results = Search.find_friends(@user, params['term'])
+		slim :friend_search, locals: {results: results}
 	end
 	
-	get '/home/search/?' do
+	get '/home/find_user' do
 		results = Friend.pending_requests(@user.id)
 		slim :search, locals: {results: results}
 	end
 
-	post '/home/search' do
-		redirect "/home/search/#{params['search_term']}"
+	post '/home/find_user' do
+		redirect "/home/find_user/#{params['search_term']}"
 	end
 
-	get '/home/search/:search_term/?' do
-		results = Search.find_friends(params['search_term'])
+	get '/home/find_user/:search_term/?' do
+		results = Search.find_users(params['search_term'])
 		slim :search, locals: {results: results}
 	end
 
-	post '/home/:user_id/add' do
-		Friend.send_request(@user.id, params['user_id'])
-		redirect "/home/search/#{params['search_term']}"
+	post '/home/requests/:user_id/send' do
+		Debug.put(@user.id)
+		Debug.put(params['user_id'].to_i)
+		Friend.send_request(@user.id, params['user_id'].to_i)
+		redirect "/home/find_user"
 	end
 
-	post '/home/:user_id/accept' do
+	post '/home/requests/:user_id/accept' do
 		Friend.accept_request(@user.id, params['user_id'])
-		redirect "/home/search/#{params['search_term']}"
+		redirect "/home/find_user"
 	end
 
-	get '/home/new/chat/?' do
+	post '/home/requests/:user_id/delete' do
+		Friend.delete(@user.id, params['user_id'])
+		redirect "/home/find_user"
+	end
+
+	get '/home/new_chat/?' do
 		slim :new_chat
 	end
 

@@ -18,16 +18,17 @@ class Message < DBEntity
     end
 
     def self.send(params, user)
-        db.execute("INSERT INTO messages (text, image, timestamp, status, sender_id, reciever_id) VALUES(?,?,?,?,?,?)", params['message'], "", "#{Time.now.utc}", 1, user.id, params['reciever'])
+        db.execute("INSERT INTO messages (text, image, timestamp, status, sender_id, reciever_id) VALUES(?,?,?,?,?,?)", params['message'], "", "#{Time.now.utc}", 1, user.id, User.just_id(params['reciever']))
+        db.execute("UPDATE friends SET last_interaction = ? WHERE id = ?", "#{Time.now.utc}", Friend.relation_id(user.id, User.just_id(params['reciever'])))
     end
 
     def self.messages(id1, id2)
-        hash_list = db.execute("SELECT id FROM messages WHERE reciever_id = ? AND sender_id = ?", id1, id2)
+        hash_list = db.execute("SELECT id FROM messages WHERE reciever_id = ? AND sender_id = ? ORDER BY timestamp", id1, id2)
         list = []
         hash_list.each do |hash|
             list << Message.new(hash['id'])
         end
-        return list
+        return list.reverse
     end
 
     def self.conversation(id1, id2)
