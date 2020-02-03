@@ -46,3 +46,28 @@ async function getSenderUsername(id) {
 function toggleMenu() {
     document.querySelector("nav").classList.toggle("show")
 }
+
+async function sendRequest(id) {
+	await fetch(`http://localhost:9292/api/v1/requests/${id}/send`);
+	location.reload()
+}
+
+async function acceptRequest(id) {
+	await fetch(`http://localhost:9292/api/v1/requests/${id}/accept`);
+	location.reload()
+}
+
+async function declineRequest(id) {
+	await fetch(`http://localhost:9292/api/v1/requests/${id}/delete`);
+	location.reload()
+}
+
+async function deleteRequest(id) {
+	await fetch(`http://localhost:9292/api/v1/requests/${id}/delete`);
+	location.reload()
+}
+
+async function deleteFriend(id) {
+	await fetch(`http://localhost:9292/api/v1/requests/${id}/delete`);
+	location.reload()
+}

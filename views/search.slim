@@ -8,21 +8,17 @@ div
         p No results
     -else
         -for result in results
-            div class='space user'
-                h1= "#{result.username}"
-                -status = Friend.status?(result.id, @user.id)
-                -if status == "friends"
-                    form action='/home/requests/#{result.id}/delete' method='post'
-                        button type='submit' Already friends
-                -elsif status == "pending"
-                    -if Friend.sender(@user.id, result.id) == @user.id
-                        form action='/home/requests/#{result.id}/delete' method='post'
-                            button type='submit' Pending request
+            div class='space results'
+                h2 #{result.username}
+                div class="result_buttons"
+                    -status = Friend.status?(result.id, @user.id)
+                    -if status == "friends"
+                        button onClick='deleteFriend(#{result.id})' Already friends
+                    -elsif status == "pending"
+                        -if Friend.sender(@user.id, result.id) == @user.id
+                            button onClick='deleteRequest(#{result.id})' Pending request
+                        -else
+                            button onClick='acceptRequest(#{result.id})' Accept
+                            button onClick='declineRequest(#{result.id})' Decline
                     -else
-                        form action='/home/requests/#{result.id}/accept' method='post'
-                            button type='submit' Accept
-                        form action='/home/requests/#{result.id}/delete' method='post'
-                            button type='submit' Decline
-                -else
-                    form action='/home/requests/#{result.id}/send' method='post'
-                        button type='submit' Send friend request
+                        button onClick="sendRequest(#{result.id.to_json})" Send friend request

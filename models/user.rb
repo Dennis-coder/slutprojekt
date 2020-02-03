@@ -31,7 +31,7 @@ class User < DBEntity
                 list << Friend.new(hash['user_id'], hash['id'])
             end
         end
-        return Sorter.friendslist(list)
+        return list
     end
 
     def messages(id)

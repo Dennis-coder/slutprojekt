@@ -1,8 +1,4 @@
 /* General css */
-:root{
-    --maxWidth: var(1000px)
-}
-
 body{
     width: 100%;
     min-height: 100vh;
@@ -10,7 +6,7 @@ body{
     display: flex;
     justify-content: space-between;
     flex-direction: column;
-    background-color: rgb(235, 235, 235);
+    background-color: rgb(245, 245, 245);
 }
 
 main{
@@ -49,6 +45,12 @@ h1{
     font-size: 2.5rem;
 }
 
+h2{
+    font-family: 'Muli', sans-serif;
+    font-size: 1.8rem;
+    margin: 0;
+}
+
 button{
     font-family: 'Muli', sans-serif;
     font-size: 1rem;
@@ -74,9 +76,8 @@ input{
 }
 
 .button{
-    background: radial-gradient(#d0d0d0, #808080);
     text-decoration: none;
-    color: white;
+    color: rgb(30, 30, 30);
     border-radius: 999rem;
     display: flex;
     align-items: center;
@@ -84,17 +85,20 @@ input{
 }
 
 .button:hover{
-    background: radial-gradient(#0000f0, #0000a0);
     text-decoration: underline;
-    transition: all .3s ease;
 }
 
 .button:active{
-    background: radial-gradient(#0000c0, #000070);
+    background: rgba(100,100,100,0.3);
 }
 
 .hidden{
     display: none;
+}
+
+.timestamp{
+    color: rgb(140, 140, 140);
+    font-size: 1rem;
 }
 
 
@@ -106,6 +110,8 @@ header{
     display: flex;
     align-items: center;
     justify-content: space-between;
+    position: sticky;
+    top: 0;
 }
 
 header a{
@@ -122,7 +128,7 @@ header div{
 }
 
 header .logo{
-    height: 4rem;
+    height: 3.5rem;
     align-self: center;
     justify-self: center;
 }
@@ -201,7 +207,7 @@ nav.show{
 
 /* Home css */
 .home{
-    flex-direction: row;
+    flex-direction: column;
     align-items: flex-start;
     justify-content: space-evenly;
 }
@@ -213,29 +219,76 @@ nav.show{
 
 aside{
     width: 200px;
-}  
+}
 
-.friend
+.friend a{
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    text-decoration: none;
+}
+
+.friend a:hover h2{
+    text-decoration: underline;
+}
+
+.friend a h2{
+    color: rgb(0, 0, 0);
+    margin-bottom: 0;
+}
+
 
 
 /* Conversation css */
-.message{
-    margin: 1rem;
-}
-
 .conversation form{
     display: flex;
     flex-direction: row;
     position: sticky;
 }
 
+.messages{
+    width: 30rem;}
 
-/* Search css */
+.message{
+    max-width: 15rem;
+    width: auto;
+    height: auto;
+    padding: 0.5rem;
+}
+
+.message p{
+    display: inline;
+    word-break: break-all   ;
+}
+
+.right_message{
+    align-self: flex-end;
+    background: radial-gradient(rgb(100,100,255), rgb(70,70,230));
+    border-radius: 0.8rem;
+    border: 1px solid rgb(100,100,100);
+}
+
+.left_message{
+    align-self: flex-start;
+    background: radial-gradient(rgb(255,255,255), rgb(220,220,220));
+    border-radius: 0.8rem;
+    border: 1px solid rgb(100,100,100);
+}
+
+.right_message p{
+    color: rgb(245, 245, 245);
+}
+
+
+/* Searchbar css */
 .search_bar{
     display: flex;
     flex-direction: row;
     justify-content: center;
     margin: 0;
+    /* position: sticky;
+    top: 0; */
 }
 
 .search_bar form{
@@ -250,4 +303,21 @@ aside{
 
 .search_bar form input{
     margin: 0;
+}
+
+
+/* Results css */
+.results{
+    max-width: 500px;
+}
+
+.result_buttons{
+    width: auto;
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+}
+
+.result_buttons button{
+    margin: 0 1rem;
 }

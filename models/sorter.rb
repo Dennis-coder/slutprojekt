@@ -13,57 +13,58 @@ class Sorter
 
     def self.last_interaction(list)
         temp = list.dup
-        out = []
-        while temp.length > 0
+        out = Array.new(list.length) {nil}
+        out.each_with_index do |_, index|
             latest_index = 0
-            temp.each_with_index do |item, index|
-                if Sorter.timestamp_compare(temp[latest_index].last_interaction, item.last_interaction) == false
-                    latest_index = index
+            temp.each_with_index do |item, index2|
+                if Sorter.timestamp_compare(item.last_interaction, temp[latest_index].last_interaction) == true
+                    latest_index = index2
                 end
             end
-            out << temp[latest_index]
+            out[index] = temp[latest_index].dup
             temp.delete_at(latest_index)
         end
         return out
     end
 
     def self.messages(list1, list2)
-        messages = []
-        while list1.length > 0 && list2.length > 0
-            if Sorter.timestamp_compare(list1.first.timestamp, list2.first.timestamp) == true
-                messages << list1.first
+        messages = Array.new(list1.length + list2.length) {nil}
+        messages.each_with_index do |_, index|
+            if list1.length == 0
+                messages[index] = list2.first
+                list2.delete_at(0)
+            elsif list2.length == 0
+                messages[index] = list1.first
                 list1.delete_at(0)
             else
-                messages << list2.first
-                list2.delete_at(0)
-            end
-        end
-        if list1.length > 0
-            list1.each do |message|
-                messages << message
-            end
-        elsif list2.length > 0
-            list2.each do |message|
-                messages << message
+                if Sorter.timestamp_compare(list1.first.timestamp, list2.first.timestamp) == true
+                    messages[index] =list1.first
+                    list1.delete_at(0)
+                else
+                    messages[index] = list2.first
+                    list2.delete_at(0)
+                end
             end
         end
         return messages
     end
 
-    def self.friendslist(list)
+    def self.alphabetical(list)
         temp = list.dup
-        out = []
-        while temp.length > 0
-            latest_index = 0
-            temp.each_with_index do |item, index|
-                if Sorter.timestamp_compare(temp[latest_index].last_interaction, item.last_interaction) == false
-                    latest_index = index
+        out = Array.new(list.length) {nil}
+        out.each_with_index do |_, pos|
+            i = 0
+            temp.each_with_index do |user, index|
+                temp_list = [user.username.downcase, temp[i].username.downcase]
+                Debug.array([pos, temp_list, temp_list.sort])
+                if temp_list.sort[0] = user.username.downcase
+                    i = index
                 end
             end
-            out << temp[latest_index]
-            temp.delete_at(latest_index)
+            out[pos] = temp[i]
+            temp.delete_at(i)
         end
-        return out
+        return out.reverse
     end
 
     def self.search(users)

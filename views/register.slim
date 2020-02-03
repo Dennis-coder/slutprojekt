@@ -1,6 +1,7 @@
 div class='register'
     h1 Create an account
     p = session['register_error']
+    -session.delete('register_error')
     form action="/register" method='post'
         div class='space'
             span Username

@@ -1,6 +1,8 @@
 div class='conversation'
     h1 Your conversation with #{params['username']}
-    
+    p = session['message_error']
+    -session.delete('message_error') 
+
     form class='send_message' action="/home/friends/#{params['username']}/send" method='post'
         input type='text' name='message'
         br
@@ -9,10 +11,12 @@ div class='conversation'
     .messages
 
         -for message in messages
-            div class='message'
-                -if message.sender_id == session['user_id']
-                    p Me:
-                -else 
-                    p= "#{User.just_username(message.sender_id)}:"
-                p= "#{message.text}"
-                p= "Sent at #{message.timestamp}"
+            if 
+                -time = message.timestamp.split
+                span class="timestamp"  #{time[1][0..4]}, #{time[0]}
+            -if message.sender_id == session['user_id']
+                div class='message right_message'
+                    p #{message.text}
+            -else 
+                div class='message left_message'
+                    p #{message.text}

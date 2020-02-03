@@ -4,21 +4,20 @@ class Application < Sinatra::Base
 
 	before do 
 		# session[:user_id] = 1
+		if session['user_id'] != nil
+			@user = User.new(session['user_id'])
+		end
 	end
 
 	before '/home/?' do
 		if session['user_id'] == nil
 			redirect '/'
-		else
-			@user = User.new(session['user_id'])
 		end
 	end
 
 	before '/home/*' do
 		if session['user_id'] == nil
 			redirect '/'
-		else
-			@user = User.new(session['user_id'])
 		end
 	end
 	
@@ -66,7 +65,7 @@ class Application < Sinatra::Base
 	end
 
 	get '/home/?' do
-		friends = @user.friends_list
+		friends = Sorter.last_interaction(@user.friends_list)
 		slim :home, locals: {friends: friends}
 	end
 	
@@ -76,12 +75,24 @@ class Application < Sinatra::Base
 	end
 
 	post '/home/friends/:reciever/send' do
-		Message.send(params, @user)
+		if session['time_last_message'] == nil || (Time.now.utc - session['time_last_message']) >= 1
+			if Validator.message(params['message']) 
+				session['time_last_message'] = Time.now.utc
+				Message.send(params, @user)
+			end
+		else
+			session['message_error'] = "Please wait 1 second before sending another message"
+		end
 		redirect "/home/friends/#{params['reciever']}"
 	end
 
 	post '/home/friends/search' do
-		redirect "/home/friends/search/#{params['search_term']}"
+		Debug.put(params)
+		if params['search_term'] == ""
+			redirect '/home'
+		else
+			redirect "/home/friends/search/#{params['search_term']}"
+		end
 	end
 
 	get '/home/friends/search/:term/?' do
@@ -95,7 +106,11 @@ class Application < Sinatra::Base
 	end
 
 	post '/home/find_user' do
-		redirect "/home/find_user/#{params['search_term']}"
+		if params['search_term'] == ""
+			redirect '/home/find_user'
+		else
+			redirect "/home/find_user/#{params['search_term']}"
+		end
 	end
 
 	get '/home/find_user/:search_term/?' do
@@ -103,25 +118,14 @@ class Application < Sinatra::Base
 		slim :search, locals: {results: results}
 	end
 
-	post '/home/requests/:user_id/send' do
-		Debug.put(@user.id)
-		Debug.put(params['user_id'].to_i)
-		Friend.send_request(@user.id, params['user_id'].to_i)
-		redirect "/home/find_user"
-	end
-
-	post '/home/requests/:user_id/accept' do
-		Friend.accept_request(@user.id, params['user_id'])
-		redirect "/home/find_user"
-	end
-
-	post '/home/requests/:user_id/delete' do
-		Friend.delete(@user.id, params['user_id'])
-		redirect "/home/find_user"
-	end
-
 	get '/home/new_chat/?' do
-		slim :new_chat
+		friends = Sorter.alphabetical(@user.friends_list)
+		slim :new_chat, locals: {friends: friends}
+	end
+
+	post '/home/new_chat' do
+		p params
+		redirect "/home/new_chat"
 	end
 
 	get '/api/v1/get/user_id' do
@@ -137,6 +141,18 @@ class Application < Sinatra::Base
 	get '/api/v1/users/:id/messages/:latest' do
 		messages = Message.new_messages(session['user_id'], params['id'], params['latest']).reverse
 		return messages.to_json
+	end
+
+	get '/api/v1/requests/:user_id/send' do
+		Friend.send_request(@user.id, params['user_id'].to_i)
+	end
+
+	get '/api/v1/requests/:user_id/accept' do
+		Friend.accept_request(@user.id, params['user_id'])
+	end
+
+	get '/api/v1/requests/:user_id/delete' do
+		Friend.delete(@user.id, params['user_id'])
 	end
 
 end

@@ -1,6 +1,6 @@
-sorter.rb - while loop i self.messages
-          - fixa en search results sorter
+sorter.rb - fixa en search results sorter
 
 övrigt - man kan lägga till sig själv som vän
        - admin ska ha egna egenskaper
        - dynamiskt sql sträng
+       - profilbild samt skicka bilder
