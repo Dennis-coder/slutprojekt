@@ -71,3 +71,13 @@ async function deleteFriend(id) {
 	await fetch(`http://localhost:9292/api/v1/requests/${id}/delete`);
 	location.reload()
 }
+
+async function addToChat(id, list) {
+	await fetch(`http://localhost:9292/api/v1/remove_from_chat/${id}`);
+	location.reload();
+}
+
+async function addToChat(id, list) {
+	await fetch(`http://localhost:9292/api/v1/add_to_chat/${id}`);
+	location.reload();
+}

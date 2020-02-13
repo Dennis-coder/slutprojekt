@@ -1,5 +1,10 @@
 form action="/home/new_chat" method="post"
+    -list.each do |id|
+        span id
     select multiple="" name="list"
         -for friend in friends
-            option value="#{friend.id}" #{friend.username}
-    button type="submit" Chat
+            -if list.include?(friend.id)
+                button onClick="removeFromChat(#{id})" Remove
+            -else
+                button onClick="addToChat(#{id})" Add
+    button type="submit" Start Chat
