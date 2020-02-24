@@ -1,6 +1,4 @@
 form action="/home/new_chat" method="post"
-    -list.each do |id|
-        span id
     select multiple="" name="list"
         -for friend in friends
             -if list.include?(friend.id)

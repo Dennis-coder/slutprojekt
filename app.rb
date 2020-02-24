@@ -155,4 +155,12 @@ class Application < Sinatra::Base
 		Friend.delete(@user.id, params['user_id'])
 	end
 
+	get '/api/v1/add_to_chat/:user_id' do
+		
+	end
+
+	get '/api/v1/remove_from_chat/:user_id' do
+		
+	end
+
 end
