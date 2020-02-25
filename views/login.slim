@@ -1,14 +1,14 @@
-div class='login'
+div class='container login centeredColumn'
     h1 Log in to your account
     
     p = session['login_error']
     -session.delete('login_error')
 
-    form action="/login" method='post'
-        div class='space'
+    form class='centeredColumn space' action="/login" method='post'
+        div class='space centeredColumn'
             span Username
             input type='text' name='username'
-        div class='space'
+        div class='space centeredColumn'
             span  Password
             input type='password' name='plaintext'
         button type='submit' Login

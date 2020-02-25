@@ -5,15 +5,20 @@ function toggleMenu() {
 function sendMessage(userId, reciever) {
 	text = document.querySelector('.text').value;
 	sendMessageAPI(userId, reciever, text);
-	messagesDiv = document.querySelector('.messages')
+	messagesDiv = document.querySelector('.messages');
 }
 
-function messageCheck(id, latest){
-	setInterval(showMessages(id, latest), 500);
+function messageCheck(id, reciever){
+	getId(reciever).then((reciever) => {
+		getLatest(id, reciever).then((latest) => {
+			
+		})
+	})
+	// setInterval(showMessages(id, latest), 500);
 }	
 
 function showMessages(id, latest) {
-	messagesDiv = document.querySelector('.messages')
+	messagesDiv = document.querySelector('.messages');
 	getNewMessages(id, latest).then((messages) => {
 		messages.forEach(message => {
 			getUserId().then((userId) => {
@@ -41,51 +46,33 @@ async function getNewMessages(id, latest) {
 	return await response.json();
 }	
 
-async function getUserId() {
-	const response = await fetch(`http://localhost:9292/api/v1/get/user_id`);
+async function getId(username) {
+	const response = await fetch(`http://localhost:9292/api/v1/get/id/${username}`);
 	return await response.json();
 }	
 
-async function getSenderUsername(id) {
+async function getSender(id) {
 	const response = await fetch(`http://localhost:9292/api/v1/message/${id}/sender`);
 	return await response.json();
 }	
 
-async function sendMessageAPI(sender, reciever, text) {
+async function sendMessageToDB(sender, reciever, text) {
 	await fetch(`http://localhost:9292/api/v1/send_message/${text}/${sender}/${reciever}`);
 }
 
-async function sendRequest(id) {
-	await fetch(`http://localhost:9292/api/v1/requests/${id}/send`);
-	location.reload()
-}
-
-async function acceptRequest(id) {
-	await fetch(`http://localhost:9292/api/v1/requests/${id}/accept`);
-	location.reload()
-}
-
-async function declineRequest(id) {
-	await fetch(`http://localhost:9292/api/v1/requests/${id}/delete`);
-	location.reload()
-}
-
-async function deleteRequest(id) {
-	await fetch(`http://localhost:9292/api/v1/requests/${id}/delete`);
-	location.reload()
-}
-
-async function deleteFriend(id) {
-	await fetch(`http://localhost:9292/api/v1/requests/${id}/delete`);
-	location.reload()
-}
-
-async function addToChat(id, list) {
-	await fetch(`http://localhost:9292/api/v1/remove_from_chat/${id}`);
+async function request(id, action) {
+	if (action == `Send`){
+		await fetch(`http://localhost:9292/api/v1/requests/${id}/send`);
+	} else if (action ==`Accept`) {
+		await fetch(`http://localhost:9292/api/v1/requests/${id}/accept`);
+	} else {
+		await fetch(`http://localhost:9292/api/v1/requests/${id}/delete`);
+	}
 	location.reload();
 }
 
 async function addToChat(id, list) {
-	await fetch(`http://localhost:9292/api/v1/add_to_chat/${id}`);
-	location.reload();
+}
+
+async function addToChat(id, list) {
 }

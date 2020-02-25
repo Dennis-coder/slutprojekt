@@ -1,8 +1,0 @@
-form action="/home/new_chat" method="post"
-    select multiple="" name="list"
-        -for friend in friends
-            -if list.include?(friend.id)
-                button onClick="removeFromChat(#{id})" Remove
-            -else
-                button onClick="addToChat(#{id})" Add
-    button type="submit" Start Chat

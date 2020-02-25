@@ -4,3 +4,5 @@ sorter.rb - fixa en search results sorter
        - admin ska ha egna egenskaper
        - dynamiskt sql sträng
        - profilbild samt skicka bilder
+
+friendCard.slim - implementera till home & friendSearch

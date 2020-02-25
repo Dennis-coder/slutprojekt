@@ -97,7 +97,7 @@ class Application < Sinatra::Base
 
 	get '/home/friends/search/:term/?' do
 		results = Search.find_friends(@user, params['term'])
-		slim :friend_search, locals: {results: results}
+		slim :friendSearch, locals: {results: results}
 	end
 	
 	get '/home/find_user' do
@@ -120,7 +120,7 @@ class Application < Sinatra::Base
 
 	get '/home/new_chat/?' do
 		friends = Sorter.alphabetical(@user.friends_list)
-		slim :new_chat, locals: {friends: friends}
+		slim :newChat, locals: {friends: friends}
 	end
 
 	post '/home/new_chat' do
@@ -128,8 +128,8 @@ class Application < Sinatra::Base
 		redirect "/home/new_chat"
 	end
 
-	get '/api/v1/get/user_id' do
-		return session['user_id'].to_json
+	get '/api/v1/get/id/:username' do
+		return User.just_id(params['username'])
 	end
 
 	get '/api/v1/message/:message_id/sender' do

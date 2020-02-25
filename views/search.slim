@@ -1,6 +1,6 @@
-div 
-    div class='search_bar'
-        form class='space' action='/home/find_user' method='post'
+div class='container centeredColumn'
+    div class='searchBar'
+        form class='space centeredRow' action='/home/find_user' method='post'
             input type="text" placeholder='Search...' name='search_term'
             button type="submit"
                 img src="/media/search.svg"
@@ -8,17 +8,17 @@ div
         p No results
     -else
         -for result in results
-            div class='space results'
+            div class='space results centeredColumn'
                 h2 #{result.username}
-                div class="result_buttons"
+                div class="resultButtons"
                     -status = Friend.status?(result.id, @user.id)
                     -if status == "friends"
-                        button onClick='deleteFriend(#{result.id})' Already friends
+                        button onClick="request(#{result.id}, 'Unfriend')"  Already friends
                     -elsif status == "pending"
                         -if Friend.sender(@user.id, result.id) == @user.id
-                            button onClick='deleteRequest(#{result.id})' Pending request
+                            button onClick="request(#{result.id}, 'Delete')"  Pending request
                         -else
-                            button onClick='acceptRequest(#{result.id})' Accept
-                            button onClick='declineRequest(#{result.id})' Decline
+                            button onClick="request(#{result.id}, 'Accept')" Accept
+                            button onClick="request(#{result.id}, 'Decline')" Decline
                     -else
-                        button onClick="sendRequest(#{result.id.to_json})" Send friend request
+                        button onClick="request(#{result.id.to_json}, 'Send')" Send friend request

@@ -11,16 +11,10 @@ body{
 
 main{
     width: 100%;
-    display: flex;
-    align-items: center;
-    flex-direction: column;
 }
-main div{
+main .container{
     max-width: 1000px;
     width: 100%;
-    display: flex;
-    align-items: center;
-    flex-direction: column;
 }
 
 footer{
@@ -79,7 +73,6 @@ input{
 .button{
     text-decoration: none;
     color: rgb(30, 30, 30);
-    border-radius: 999rem;
     display: flex;
     align-items: center;
     justify-content: center;
@@ -90,7 +83,7 @@ input{
 }
 
 .button:active{
-    background: rgba(100,100,100,0.3);
+    text-shadow: 1px 1px rgba(0, 0, 0, 0.4);
 }
 
 .hidden{
@@ -100,6 +93,20 @@ input{
 .timestamp{
     color: rgb(140, 140, 140);
     font-size: 1rem;
+}
+
+.centeredRow{
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-direction: row;
+}
+
+.centeredColumn{
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-direction: column;
 }
 
 
@@ -172,6 +179,10 @@ nav.show{
     text-decoration: underline;
 }
 
+.menuButton:active{
+    text-shadow: 1px 1px rgba(255,255,255, 0.6);
+}
+
 /* Index css */
 .index{
     height: 40rem;
@@ -188,17 +199,6 @@ nav.show{
 
 
 /* Login css & Register css */
-.login form{
-    height: 100%;
-}
-
-.login{
-    height: 30rem; 
-}
-
-.register{
-    height: 40rem;
-}
 
 
 /* Home css */
@@ -206,12 +206,7 @@ nav.show{
     flex-direction: column;
     align-items: center;
     justify-content: space-evenly;
-}
-
-.home_button img{
-    height: 2.5rem;
-    padding: 0.5rem;
-}    
+} 
 
 .friends {
     overflow: auto;
@@ -219,15 +214,7 @@ nav.show{
     width: 25rem;
 }
 
-aside{
-    width: 200px;
-}
-
 .friend a{
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
     text-decoration: none;
 }
 
@@ -243,11 +230,6 @@ aside{
 
 
 /* Conversation css */
-.conversation form{
-    display: flex;
-    flex-direction: row;
-    position: sticky;
-}
 
 .messages{
     width: 25rem;
@@ -255,74 +237,69 @@ aside{
     max-height: 75vh;
 }
 
+.messageDiv{
+    width: 100%;
+}
+
 .message{
     max-width: 15rem;
     width: auto;
     height: auto;
     padding: 0.5rem;
+    border-radius: 0.8rem;
+    border: 1px solid rgb(100,100,100);
+    padding: 0.4rem;
+}
+
+.messageDiv .timestamp{
+    display: none;
+}
+
+.messageDiv:active .timestamp{
+    display: initial;
 }
 
 .message p{
     display: inline;
-    word-break: break-all   ;
+    word-break: break-all;
 }
 
-.send_message{
-    display: flex;
-    flex-direction: row;
-    justify-content: center;
-}
-
-.right_message{
+.rightMessage{
     align-self: flex-end;
     background: radial-gradient(rgb(100,100,255), rgb(70,70,230));
-    border-radius: 0.8rem;
-    border: 1px solid rgb(100,100,100);
 }
 
-.left_message{
+.leftMessage{
     align-self: flex-start;
     background: radial-gradient(rgb(255,255,255), rgb(220,220,220));
-    border-radius: 0.8rem;
-    border: 1px solid rgb(100,100,100);
 }
 
-.right_message p{
+.rightMessage p{
     color: rgb(245, 245, 245);
 }
 
 
 /* Searchbar css */
-.search_bar{
-    display: flex;
-    flex-direction: row;
-    justify-content: center;
+.searchBar{
     margin: 0;
-    /* position: sticky;
-    top: 0; */
 }
 
-.search_bar form{
-    display: flex;
-    flex-direction: row;
-    justify-content: center;
-}
 
-.search_bar form button{
+.searchBar form button{
     width: 2.4rem;
 }
 
-.search_bar form input{
+.searchBar form input{
     margin: 0;
 }
 
 
 /* Results css */
 .results{
-    max-width: 500px;
+    max-width: 30rem;
 }
 
-.result_buttons{
+.resultButtons{
     width: auto;
     display: flex;
     flex-direction: row;

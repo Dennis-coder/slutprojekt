@@ -19,8 +19,8 @@ html lang="en"
                 a class="menuButton" href="/logout" Logout
 
         header
-            a class="" href="#" onclick="toggleMenu()"
-                img class="menuLogo" src="/media/menu.svg"
+            a href="#" onclick="toggleMenu()"
+                img src="/media/menu.svg"
             div
 
                 -if session['user_id'] == nil
@@ -30,9 +30,9 @@ html lang="en"
                     h1 #{@user.username}
 
             a href="/"
-                    img class="logo" src='/media/logo.png'
+                    img src='/media/logo.png'
 
-        main class='space'
+        main class='space centeredColumn'
             == yield
 
         footer 
