@@ -1,6 +1,16 @@
-async function timer(id, latest){
-	setTimeout(showMessages(id, latest), 500);
+function toggleMenu() {
+	document.querySelector("nav").classList.toggle("show");
 }
+
+function sendMessage(userId, reciever) {
+	text = document.querySelector('.text').value;
+	sendMessageAPI(userId, reciever, text);
+	messagesDiv = document.querySelector('.messages')
+}
+
+function messageCheck(id, latest){
+	setInterval(showMessages(id, latest), 500);
+}	
 
 function showMessages(id, latest) {
 	messagesDiv = document.querySelector('.messages')
@@ -8,43 +18,41 @@ function showMessages(id, latest) {
 		messages.forEach(message => {
 			getUserId().then((userId) => {
 				getSenderUsername(message[0]).then((sender) => {
-					console.log(sender);
-					console.log(userId);
-					messageDiv = `<div class="message">`;
+					newDiv = `<div class="message">`;
 					if (message[3] == userId){
-						messageDiv += `<p>Me:</p>`;
-					}
+						newDiv += `<p>Me:</p>`;
+					}	
 					else{
-						messageDiv += `<p>${sender}</p>`;
-					}
-					messageDiv +=  `<p>${message[1]}</p>`;
-					messageDiv +=  `<p>Sent at ${message[2]}</p></div>`;
-					messagesDiv.innerHTML = messageDiv + messagesDiv.innerHTML;
-				})
-			})
-		});
-	}
+						newDiv += `<p>${sender}</p>`;
+					}	
+					newDiv +=  `<p>${message[1]}</p>`;
+					newDiv +=  `<p>Sent at ${message[2]}</p></div>`;
+					messagesDiv.innerHTML = newDiv + messagesDiv.innerHTML;
+				})	
+			})	
+		});	
+	}	
 	)
-}
+}	
 
 
 async function getNewMessages(id, latest) {
 	const response = await fetch(`http://localhost:9292/api/v1/users/${id}/messages/${latest}`);
 	return await response.json();
-}
+}	
 
 async function getUserId() {
 	const response = await fetch(`http://localhost:9292/api/v1/get/user_id`);
 	return await response.json();
-}
+}	
 
 async function getSenderUsername(id) {
 	const response = await fetch(`http://localhost:9292/api/v1/message/${id}/sender`);
 	return await response.json();
-}
+}	
 
-function toggleMenu() {
-    document.querySelector("nav").classList.toggle("show")
+async function sendMessageAPI(sender, reciever, text) {
+	await fetch(`http://localhost:9292/api/v1/send_message/${text}/${sender}/${reciever}`);
 }
 
 async function sendRequest(id) {

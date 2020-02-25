@@ -1,5 +1,4 @@
 div class='home'
-    div 
     -if friends.length < 1
         div class='space '
             p Try finding some friends to chat with
@@ -12,9 +11,10 @@ div class='home'
                 button type="submit"
                     img src="/media/search.svg"
 
-        -for friend in friends
-            div class='friend space'
-                a href="/home/friends/#{friend.username}"
-                    h2 #{friend.username}
-                    -time = friend.last_interaction.split
-                    span class="timestamp" #{time[1][0..4]}, #{time[0]}
+        div class='friends scroll' 
+            -for friend in friends
+                div class='friend space'
+                    a href="/home/friends/#{friend.username}"
+                        h2 #{friend.username}
+                        -time = friend.last_interaction.split
+                        span class="timestamp" #{time[1][0..4]}, #{time[0]}

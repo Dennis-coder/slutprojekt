@@ -43,6 +43,7 @@ p{
 h1{
     font-family: 'Muli', sans-serif;
     font-size: 2.5rem;
+    margin: 0;
 }
 
 h2{
@@ -104,7 +105,7 @@ input{
 
 /* Header css */
 header{
-    height: 6rem;
+    height: 4rem;
     width: 100%;
     background: rgb(240, 240, 0);
     display: flex;
@@ -127,8 +128,8 @@ header div{
     justify-content: space-between;
 }
 
-header .logo{
-    height: 3.5rem;
+header img{
+    height: 2.5rem;
     align-self: center;
     justify-self: center;
 }
@@ -143,15 +144,10 @@ header .button{
 .menu{
     background-color: rgba(0, 0, 0, 0.4);
     display: flex;
-    /* flex-direction: column; */
-}
-
-.menuLogo{
-    height: 3rem;
 }
 
 nav{
-    margin-top: 6rem;
+    margin-top: 4rem;
     height: auto;
     width: 18rem;
     position: absolute;
@@ -208,7 +204,7 @@ nav.show{
 /* Home css */
 .home{
     flex-direction: column;
-    align-items: flex-start;
+    align-items: center;
     justify-content: space-evenly;
 }
 
@@ -216,6 +212,12 @@ nav.show{
     height: 2.5rem;
     padding: 0.5rem;
 }    
+
+.friends {
+    overflow: auto;
+    max-height: 75vh;
+    width: 25rem;
+}
 
 aside{
     width: 200px;
@@ -248,7 +250,10 @@ aside{
 }
 
 .messages{
-    width: 30rem;}
+    width: 25rem;
+    overflow: auto;
+    max-height: 75vh;
+}
 
 .message{
     max-width: 15rem;
@@ -260,6 +265,12 @@ aside{
 .message p{
     display: inline;
     word-break: break-all   ;
+}
+
+.send_message{
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
 }
 
 .right_message{
