@@ -132,13 +132,7 @@ class Application < Sinatra::Base
 		return User.just_id(params['username'])
 	end
 
-	get '/api/v1/message/:message_id/sender' do
-		out = Message.sender(params['message_id']).first.first
-		out = User.username(out).first.first
-		return out.to_json
-	end
-
-	get '/api/v1/users/:id/messages/:latest' do
+	get '/api/v1/messages/:id/:latest' do
 		messages = Message.new_messages(session['user_id'], params['id'], params['latest']).reverse
 		return messages.to_json
 	end

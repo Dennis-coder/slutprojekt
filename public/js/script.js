@@ -8,51 +8,31 @@ function sendMessage(userId, reciever) {
 	messagesDiv = document.querySelector('.messages');
 }
 
-function messageCheck(id, reciever){
-	getId(reciever).then((reciever) => {
-		getLatest(id, reciever).then((latest) => {
-			
+function messageCheck(id, friend){
+	getId(friend).then((friendId) => {
+		getLatest(id, friendId).then((latest) => {
+			setInterval(showMessages(frienId, latest), 200);
 		})
 	})
-	// setInterval(showMessages(id, latest), 500);
 }	
 
 function showMessages(id, latest) {
-	messagesDiv = document.querySelector('.messages');
 	getNewMessages(id, latest).then((messages) => {
 		messages.forEach(message => {
-			getUserId().then((userId) => {
-				getSenderUsername(message[0]).then((sender) => {
-					newDiv = `<div class="message">`;
-					if (message[3] == userId){
-						newDiv += `<p>Me:</p>`;
-					}	
-					else{
-						newDiv += `<p>${sender}</p>`;
-					}	
-					newDiv +=  `<p>${message[1]}</p>`;
-					newDiv +=  `<p>Sent at ${message[2]}</p></div>`;
-					messagesDiv.innerHTML = newDiv + messagesDiv.innerHTML;
-				})	
-			})	
-		});	
-	}	
-	)
+			messagesDiv = document.querySelector('.messages');
+			console.log(message);
+		})
+	})
 }	
 
 
 async function getNewMessages(id, latest) {
-	const response = await fetch(`http://localhost:9292/api/v1/users/${id}/messages/${latest}`);
+	const response = await fetch(`http://localhost:9292/api/v1/messages/${id}/${latest}`);
 	return await response.json();
 }	
 
 async function getId(username) {
 	const response = await fetch(`http://localhost:9292/api/v1/get/id/${username}`);
-	return await response.json();
-}	
-
-async function getSender(id) {
-	const response = await fetch(`http://localhost:9292/api/v1/message/${id}/sender`);
 	return await response.json();
 }	
 
