@@ -2,29 +2,30 @@ function toggleMenu() {
 	document.querySelector("nav").classList.toggle("show");
 }
 
-function sendMessage(userId, reciever) {
+function sendMessage(reciever) {
 	text = document.querySelector('.text').value;
-	sendMessageAPI(userId, reciever, text);
-	messagesDiv = document.querySelector('.messages');
+	document.querySelector('.text').value = ``;
+	getId(reciever).then(recieverId => {
+		sendMessageToDB(recieverId, text);
+	})
+	getTimestamp().then(time => {
+		time = time.split(" ");
+		messagesDiv = document.querySelector('.messages');
+		messagesDiv.innerHTML = `<div class='messageDiv centeredColumn space'><div class='message rightMessage'><p>${text}</p></div><span class="timestamp">${time[1].slice(0, 5)}, ${time[0]}</span></div>` + messagesDiv.innerHTML;
+	})
 }
 
-function messageCheck(id, friend){
-	getId(friend).then((friendId) => {
-		getLatest(id, friendId).then((latest) => {
-			setInterval(showMessages(frienId, latest), 200);
-		})
-	})
-}	
+function messageCheck(id, friendId, latest) {
+	setInterval(showMessages(id, friendId, latest), 500);
+}
 
-function showMessages(id, latest) {
-	getNewMessages(id, latest).then((messages) => {
-		messages.forEach(message => {
-			messagesDiv = document.querySelector('.messages');
-			console.log(message);
-		})
-	})
+async function showMessages(id, friendId, latest) {
+	console.log("hej");
+	// getNewMessages(friendId, latest).then(messages => {
+	// 	messages.forEach(message => {
+	// 	})
+	// })
 }	
-
 
 async function getNewMessages(id, latest) {
 	const response = await fetch(`http://localhost:9292/api/v1/messages/${id}/${latest}`);
@@ -33,11 +34,16 @@ async function getNewMessages(id, latest) {
 
 async function getId(username) {
 	const response = await fetch(`http://localhost:9292/api/v1/get/id/${username}`);
-	return await response.json();
+	return response.json();
 }	
 
-async function sendMessageToDB(sender, reciever, text) {
-	await fetch(`http://localhost:9292/api/v1/send_message/${text}/${sender}/${reciever}`);
+async function sendMessageToDB(reciever, text) {
+	await fetch(`http://localhost:9292/api/v1/message/send/${text}/${reciever}`);
+}
+
+async function getTimestamp(){
+	const response = await fetch(`http://localhost:9292/api/v1/get/timestamp`);
+	return response.json();
 }
 
 async function request(id, action) {
@@ -51,8 +57,12 @@ async function request(id, action) {
 	location.reload();
 }
 
-async function addToChat(id, list) {
+async function addToChat(id) {
+	await fetch(`http://localhost:9292/api/v1/newChat/add/${id}`);
+	location.reload();
 }
 
-async function addToChat(id, list) {
+async function removeFromChat(id) {
+	await fetch(`http://localhost:9292/api/v1/newChat/remove/${id}`);
+	location.reload();
 }

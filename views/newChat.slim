@@ -1,9 +1,11 @@
 div class='container centeredColumn'
     form action="/home/new_chat" method="post"
-        select multiple="" name="list"
+        div class='scroll'
             -for friend in friends
-                -if list.include?(friend.id)
-                    button onClick="removeFromChat(#{id})" Remove
-                -else
-                    button onClick="addToChat(#{id})" Add
+                div
+                    h2 #{friend.username}
+                    -if session['chat_list'].include?(friend.id.to_s)
+                        button onClick="removeFromChat(#{friend.id})" Remove
+                    -else
+                        button onClick="addToChat(#{friend.id})" Add
         button type="submit" Start Chat

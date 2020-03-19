@@ -38,14 +38,14 @@ class Message < DBEntity
         return messages
     end
 
-    def self.new_messages(id1, id2, latest)
+    def self.new_messages(id1, params)
+        id2 = params['id']
+        latest = params['latest']
         messages = Message.conversation(id1, id2)
         newMessages = []
-        messages.each do |message| 
-            if Sorter.timestamp_compare(latest, message['timestamp']) != latest
+        messages.each do |message|
+            if !Sorter.timestamp_compare(latest, message.timestamp)
                 newMessages << message
-            else
-                break
             end
         end
         return newMessages

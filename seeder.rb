@@ -19,6 +19,8 @@ class Seeder
         db.execute("DROP TABLE IF EXISTS users;")
         db.execute("DROP TABLE IF EXISTS messages;")
         db.execute("DROP TABLE IF EXISTS friends;")
+        db.execute("DROP TABLE IF EXISTS groups")
+        db.execute("DROP TABLE IF EXISTS groups_handler")
     end
 
     def self.create_tables(db)
@@ -50,6 +52,18 @@ class Seeder
                 "status" INTEGER NOT NULL,
                 "last_interaction" TEXT NOT NULL,
                 "friends_since" TEXT NOT NULL
+            );
+        SQL
+        db.execute <<-SQL
+            CREATE TABLE "groups" (
+                "id" INTEGER PRIMARY KEY AUTOINCREMENT,
+                "timestamp" TEXT NOT NULL
+            );
+        SQL
+        db.execute <<-SQL
+            CREATE TABLE "groups_handler" (
+                "group_id" INTEGER NOT NULL,
+                "user_id" INTEGER NOT NULL
             );
         SQL
     end

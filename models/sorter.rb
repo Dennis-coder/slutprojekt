@@ -56,7 +56,6 @@ class Sorter
             i = 0
             temp.each_with_index do |user, index|
                 temp_list = [user.username.downcase, temp[i].username.downcase]
-                Debug.array([pos, temp_list, temp_list.sort])
                 if temp_list.sort[0] = user.username.downcase
                     i = index
                 end

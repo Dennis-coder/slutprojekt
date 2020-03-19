@@ -12,8 +12,4 @@ div class='container home centeredColumn'
 
         div class='friends scroll' 
             -for friend in friends
-                div class='friend space'
-                    a class='centeredColumn' href="/home/friends/#{friend.username}"
-                        h2 #{friend.username}
-                        -time = friend.last_interaction.split
-                        span class="timestamp" #{time[1][0..4]}, #{time[0]}
+                == slim :'partials/friendCard', locals: {friend: friend}

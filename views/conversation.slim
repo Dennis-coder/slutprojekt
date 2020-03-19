@@ -1,12 +1,11 @@
 div class='container conversation centeredColumn' 
-    body onload="messageCheck(#{@user.id}, '#{params['username']}')"
     h1 Your conversation with #{params['username']}
     p = session['message_error']
     -session.delete('message_error') 
 
     div class='space centeredRow'
         input class='text' placeholder='Write message here...'
-        button onClick='sendMessage(#{@user.id})' Send
+        button onClick='sendMessage(#{params['username']})' Send
 
     div class='messages'
         -for message in messages
@@ -19,3 +18,7 @@ div class='container conversation centeredColumn'
                         p #{message.text}
                 -time = message.timestamp.split
                 span class="timestamp"  #{time[1][0..4]}, #{time[0]}
+    -if messages.first != nil
+        body onload="messageCheck(#{@user.id}, #{User.just_id(params['username'])}, '2020-03-06 15:26:00 UTC')"
+    -else
+        body onload="messageCheck(#{@user.id}, #{User.just_id(params['username'])}, '#{Time.now.utc}')"

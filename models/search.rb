@@ -17,7 +17,7 @@ class Search < DBEntity
         return false
     end
 
-    def self.find_users(term)
+    def self.find_users(term, user_id)
         user_ids = User.all
         users = []
         user_ids.each do |id|
@@ -25,7 +25,7 @@ class Search < DBEntity
         end
         out = []
         users.each do |user|
-            if Search.partial_match(user.username.downcase, term.downcase) == true
+            if Search.partial_match(user.username.downcase, term.downcase) == true && user.id != user_id
                 out << user
             end
         end
@@ -33,7 +33,7 @@ class Search < DBEntity
     end
 
     def self.find_friends(user, term)
-        friendslist = user.friends_list
+        friendslist = user.friendslist
         out = []
         friendslist.each do |friend|
             if Search.partial_match(friend.username.downcase, term.downcase) == true

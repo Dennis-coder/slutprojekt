@@ -65,7 +65,7 @@ class Application < Sinatra::Base
 	end
 
 	get '/home/?' do
-		friends = Sorter.last_interaction(@user.friends_list)
+		friends = Sorter.last_interaction(@user.friendslist)
 		slim :home, locals: {friends: friends}
 	end
 	
@@ -87,7 +87,6 @@ class Application < Sinatra::Base
 	end
 
 	post '/home/friends/search' do
-		Debug.put(params)
 		if params['search_term'] == ""
 			redirect '/home'
 		else
@@ -114,27 +113,53 @@ class Application < Sinatra::Base
 	end
 
 	get '/home/find_user/:search_term/?' do
-		results = Search.find_users(params['search_term'])
+		results = Search.find_users(params['search_term'], @user.id)
 		slim :search, locals: {results: results}
 	end
 
 	get '/home/new_chat/?' do
-		friends = Sorter.alphabetical(@user.friends_list)
+		if session['chat_list'] == nil
+			session['chat_list'] = []
+		end
+		friends = Sorter.alphabetical(@user.friendslist)
 		slim :newChat, locals: {friends: friends}
 	end
 
 	post '/home/new_chat' do
-		p params
-		redirect "/home/new_chat"
+		list = session['chat_list']
+		session['chat_list'] = nil
+		if list.length == 1
+			redirect "/home/friends/#{User.just_username(list.first.to_i)}"
+		elsif list.length > 1
+
+		else
+
+			redirect "/home/new_chat"
+		end
 	end
 
 	get '/api/v1/get/id/:username' do
-		return User.just_id(params['username'])
+		return User.just_id(params['username']).to_json
+	end
+
+	get '/api/v1/get/timestamp' do
+		return Time.now.utc.to_json
 	end
 
 	get '/api/v1/messages/:id/:latest' do
-		messages = Message.new_messages(session['user_id'], params['id'], params['latest']).reverse
+		messages = Message.new_messages(session['user_id'], params)
 		return messages.to_json
+	end
+
+	get '/api/v1/message/send/:message/:reciever' do
+		if session['time_last_message'] == nil || (Time.now.utc - session['time_last_message']) >= 1
+			if Validator.message(params['message']) 
+				session['time_last_message'] = Time.now.utc
+				Message.send(params, @user)
+			end
+		else
+			session['message_error'] = "Please wait 1 second before sending another message"
+		end
 	end
 
 	get '/api/v1/requests/:user_id/send' do
@@ -149,12 +174,12 @@ class Application < Sinatra::Base
 		Friend.delete(@user.id, params['user_id'])
 	end
 
-	get '/api/v1/add_to_chat/:user_id' do
-		
+	get '/api/v1/newChat/add/:user_id' do
+		session['chat_list'] << params['user_id']
 	end
 
-	get '/api/v1/remove_from_chat/:user_id' do
-		
+	get '/api/v1/newChat/remove/:user_id' do
+		session['chat_list'].delete(params['user_id'])
 	end
 
 end
