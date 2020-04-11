@@ -1,15 +1,30 @@
-div class='container home centeredColumn'
-    -if friends.length < 1
-        div class='space centeredColumn'
-            p Try finding some friends to chat with
-            a class="button" href="/home/find_user" Click here to find a user
-    -else   
+div class='container home centeredColumn' 
+
+    div class='friendsOrGroups centeredRow'
+        a class='messagesOption viewFriends active' href='#' onclick='viewFriends()' Friends
+        a class='messagesOption viewGroups' href='#' onclick='viewGroups()' Groups
+    
+    div class='friends scroll' 
+        -if friends.length < 1
+            div class='space centeredColumn'
+                p Try finding some friends to chat with
+                a class="button" href="/home/find_user" Click here to find a user
+        -for friend in friends
+            == slim :'partials/friendCard', locals: {friend: friend}
         div class='searchBar'
             form class='space centeredRow' action='/home/friends/search' method='post'
-                input type="text" placeholder='Search...' name='search_term'
+                input type="text" placeholder='Find a friend...' name='search_term'
                 button type="submit"
                     img src="/media/search.svg"
-
-        div class='friends scroll' 
-            -for friend in friends
-                == slim :'partials/friendCard', locals: {friend: friend}
+    
+    div class='groups scroll hidden'
+        -if groups.length < 1
+            div class='space centeredColumn'
+                p You are currently not in a groupchat
+        -for group in groups
+            div class='friend space'
+                a class='centeredColumn' href="/home/groups/#{group.id}"
+                    h2 #{group.name}
+                    -time = group.last_interaction.split
+                    span class="timestamp" #{time[1][0..4]}, #{time[0]}
+    

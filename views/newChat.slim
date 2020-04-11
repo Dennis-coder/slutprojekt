@@ -1,11 +1,9 @@
 div class='container centeredColumn'
     form action="/home/new_chat" method="post"
         div class='scroll'
+            input type='text' name='group_name' value='Group name'
             -for friend in friends
-                div
+                div class="groupOption"
                     h2 #{friend.username}
-                    -if session['chat_list'].include?(friend.id.to_s)
-                        button onClick="removeFromChat(#{friend.id})" Remove
-                    -else
-                        button onClick="addToChat(#{friend.id})" Add
+                    input type="checkbox" name=friend.username value=friend.id 
         button type="submit" Start Chat

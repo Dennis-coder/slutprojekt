@@ -21,6 +21,7 @@ class Seeder
         db.execute("DROP TABLE IF EXISTS friends;")
         db.execute("DROP TABLE IF EXISTS groups")
         db.execute("DROP TABLE IF EXISTS groups_handler")
+        db.execute("DROP TABLE IF EXISTS groups_messages")
     end
 
     def self.create_tables(db)
@@ -37,7 +38,6 @@ class Seeder
             CREATE TABLE "messages" (
                 "id" INTEGER PRIMARY KEY AUTOINCREMENT,
                 "text" TEXT NOT NULL,
-                "image" TEXT,
                 "timestamp" TEXT NOT NULL,
                 "status" INTEGER NOT NULL,
                 "sender_id" INTEGER NOT NULL,
@@ -57,13 +57,24 @@ class Seeder
         db.execute <<-SQL
             CREATE TABLE "groups" (
                 "id" INTEGER PRIMARY KEY AUTOINCREMENT,
-                "timestamp" TEXT NOT NULL
+                "name" TEXT NOT NULL,
+                "created_at" TEXT NOT NULL, 
+                "last_interaction" TEXT NOT NULL
             );
         SQL
         db.execute <<-SQL
             CREATE TABLE "groups_handler" (
                 "group_id" INTEGER NOT NULL,
                 "user_id" INTEGER NOT NULL
+            );
+        SQL
+        db.execute <<-SQL
+            CREATE TABLE "groups_messages" (
+                "id" INTEGER PRIMARY KEY AUTOINCREMENT,
+                "text" TEXT,
+                "timestamp" TEXT NOT NULL,
+                "group_id" INTEGER NOT NULL,
+                "sender_id" INTEGER NOT NULL
             );
         SQL
     end
@@ -80,14 +91,14 @@ class Seeder
         end
 
         messages = [
-            {text: "Message test 1", image: "", status: 1, sender_id: 3, reciever_id: 1},
-            {text: "Message test 2", image: "", status: 1, sender_id: 2, reciever_id: 1},
-            {text: "Message test 3", image: "", status: 1, sender_id: 2, reciever_id: 1},
-            {text: "Message test 4", image: "", status: 1, sender_id: 2, reciever_id: 1}
+            {text: "Message test 1", status: 1, sender_id: 3, reciever_id: 1},
+            {text: "Message test 2", status: 1, sender_id: 2, reciever_id: 1},
+            {text: "Message test 3", status: 1, sender_id: 2, reciever_id: 1},
+            {text: "Message test 4", status: 1, sender_id: 2, reciever_id: 1}
         ]
 
         messages.each do |message|
-            db.execute("INSERT INTO messages (text, image, timestamp, status, sender_id, reciever_id) VALUES(?,?,?,?,?,?)", message[:text], "", "#{Time.now.utc}", 1, message[:sender_id], message[:reciever_id])
+            db.execute("INSERT INTO messages (text, timestamp, status, sender_id, reciever_id) VALUES(?,?,?,?,?)", message[:text], "#{Time.now.utc}", 1, message[:sender_id], message[:reciever_id])
         end
 
         friends = [
@@ -168,7 +179,7 @@ class Seeder
         end
     end
 end
-
+puts "Please enter the specific table you want to reset or type 'all' to reset everything"
 table = gets.chomp
 if table == "users"
     Seeder.users

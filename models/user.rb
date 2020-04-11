@@ -22,16 +22,25 @@ class User < DBEntity
     end
 
     def friendslist()
-        hash_list = db.execute("SELECT id, user_id, user2_id FROM friends WHERE (user_id = ? OR user2_id = ?) AND status = ?", @id, @id, 0)
+        hash_list = db.execute("SELECT user_id, user2_id FROM friends WHERE (user_id = ? OR user2_id = ?) AND status = ?", @id, @id, 0)
         list = []
         hash_list.each do |hash|
             if hash['user_id'] == @id
-                list << Friend.new(hash['user2_id'], hash['id'])
+                list << Friend.new(@id, hash['user2_id'])
             else
-                list << Friend.new(hash['user_id'], hash['id'])
+                list << Friend.new(@id, hash['user_id'])
             end
         end
-        return list
+        return Sorter.last_interaction(list)
+    end
+
+    def groups()
+        id_list = db.execute("SELECT group_id FROM groups_handler WHERE user_id = ?", @id)
+        groups_list = []
+        id_list.each do |id|
+            groups_list << Groupchat.new(id['group_id'])
+        end
+        return Sorter.last_interaction(groups_list)
     end
 
     def messages(id)
@@ -43,11 +52,11 @@ class User < DBEntity
         return list
     end
     
-    def self.just_id(username)
+    def self.id(username)
         db.execute("SELECT id FROM users WHERE username = ?", username).first['id']
     end
 
-    def self.just_username(id)
+    def self.username(id)
         db.execute("SELECT username FROM users WHERE id = ?", id).first['username']
     end
 

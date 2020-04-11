@@ -1,17 +1,40 @@
 class Friend < DBEntity
 
-    attr_accessor :id, :username, :last_interaction, :friends_since
+    attr_accessor :id, :username, :last_interaction, :friends_since, :messages
 
-    def initialize(user_id, relation_id)
-        properties = self.properties(user_id, relation_id)
+    def initialize(user_id, friend_id)
+        properties = self.properties(user_id, friend_id)
         @id = properties['id']
         @username = properties['username']
         @last_interaction = properties['last_interaction']
         @friends_since = properties['friends_since']
+        @messages = get_messages(user_id)
     end
 
-    def properties(user_id, relation_id)
-        self.db.execute("SELECT id, username FROM users WHERE id = ?", user_id).first.merge(self.db.execute("SELECT last_interaction, friends_since FROM friends WHERE id = ?", relation_id).first)
+    def properties(user_id, friend_id)
+        self.db.execute("SELECT id, username FROM users WHERE id = ?", friend_id).first.merge(self.db.execute("SELECT last_interaction, friends_since FROM friends WHERE (user_id = ? AND user2_id = ?) OR (user2_id = ? AND user_id = ?)", user_id, friend_id, user_id, friend_id).first)
+    end
+
+    def get_messages(user_id)
+        hash_list = db.execute("SELECT id FROM messages WHERE (reciever_id = ? AND sender_id = ?) OR (reciever_id = ? AND sender_id = ?) ORDER BY timestamp", user_id, @id, @id, user_id)
+        list = []
+        hash_list.each do |hash|
+            list << Message.new(hash['id'])
+        end
+        return list.reverse
+    end
+
+    def self.send_message(params, user)
+        db.execute("INSERT INTO messages (text, timestamp, status, sender_id, reciever_id) VALUES(?,?,?,?,?)", params['message'], "#{Time.now.utc}", 1, user.id, params['reciever'])
+        
+        db.execute("UPDATE friends SET last_interaction = ? WHERE id = ?", "#{Time.now.utc}", Friend.relation_id(user.id, params['reciever']))
+    end
+
+    def self.conversation(id1, id2)
+        recieved = Message.messages(id1, id2)
+        sent = Message.messages(id2, id1)
+        messages = Sorter.messages(recieved, sent)
+        return messages
     end
 
     def self.send_request(user_id, user2_id)
@@ -85,6 +108,19 @@ class Friend < DBEntity
             return temp['id']
         end
         return nil
+    end
+
+    def self.new_messages(user_id, params)
+        friend = Friend.new(user_id, params['id'].to_i)
+        latest = params['latest']
+        newMessages = []
+        friend.messages.each do |message|
+            if !Sorter.timestamp_compare(latest, message.timestamp) && message.sender_id != user_id
+                newMessages << {'text' => message.text, 'timestamp' => message.timestamp, 'sender' => User.username(message.sender_id)}
+            end
+        end
+        # return "hej"
+        return newMessages
     end
 
 end

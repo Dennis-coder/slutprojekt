@@ -1,0 +1,21 @@
+div class='container conversation centeredColumn' 
+    h1 = group.name
+    
+    p = session['message_error']
+    -session.delete('message_error') 
+
+    div class='space centeredRow'
+        input class='text' placeholder='Write message here...'
+        button onClick='sendGroupMessage(#{group.id})' Send
+
+    div class='messages'
+        -for message in group.messages
+            div class='messageDiv centeredColumn space'
+                -if message['sender_id'] == @user.id
+                    div class='message rightMessage'
+                        p #{message['text']}
+                -else 
+                    div class='message leftMessage'
+                        p #{message['text']}
+                -time = message['timestamp'].split
+                span class="timestamp"  #{time[1][0..4]}, #{time[0]}

@@ -1,16 +1,17 @@
 div class='container conversation centeredColumn' 
-    h1 Your conversation with #{params['username']}
+    h1 Your conversation with #{friend.username}
     p = session['message_error']
     -session.delete('message_error') 
 
     div class='space centeredRow'
         input class='text' placeholder='Write message here...'
-        button onClick='sendMessage(#{params['username']})' Send
+        button onClick="sendMessage(#{friend.id})" Send
+        -p friend.id
 
     div class='messages'
-        -for message in messages
+        -for message in friend.messages
             div class='messageDiv centeredColumn space'
-                -if message.sender_id == session['user_id']
+                -if message.sender_id == @user.id
                     div class='message rightMessage'
                         p #{message.text}
                 -else 
@@ -18,7 +19,9 @@ div class='container conversation centeredColumn'
                         p #{message.text}
                 -time = message.timestamp.split
                 span class="timestamp"  #{time[1][0..4]}, #{time[0]}
-    -if messages.first != nil
-        body onload="messageCheck(#{@user.id}, #{User.just_id(params['username'])}, '2020-03-06 15:26:00 UTC')"
+    -if friend.messages.first != nil
+        body onload="startChecker(#{@user.id}, #{friend.id})"
+        input class='timestampChecker' value='#{friend.messages.first.timestamp}'
     -else
-        body onload="messageCheck(#{@user.id}, #{User.just_id(params['username'])}, '#{Time.now.utc}')"
+        body onload="messageCheck(#{@user.id}, #{friend.id})"
+        input class='timestampChecker' value='#{Time.now.utc}'

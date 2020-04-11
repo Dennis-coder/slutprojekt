@@ -109,6 +109,10 @@ input{
     flex-direction: column;
 }
 
+.hidden{
+    display: none;
+}
+
 
 /* Header css */
 header{
@@ -205,8 +209,24 @@ nav.show{
 .home{
     flex-direction: column;
     align-items: center;
-    justify-content: space-evenly;
+    justify-content: space-between;
+    height: 100%;
 } 
+
+.messagesOption{
+    padding: 0.5rem 2rem;
+    text-decoration: none;
+    color: black;
+    /* border: rgb(100,100,100) 1px solid; */
+}
+
+.messagesOption:hover{
+    background: rgb(235,235,235);
+}
+
+.active{
+    background: rgb(220,220,220);
+}
 
 .friends {
     overflow: auto;
@@ -308,4 +328,13 @@ nav.show{
 
 .result_buttons button{
     margin: 0 1rem;
+}
+
+
+/* Group css */
+.groupOption{
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: space-between;
 }
