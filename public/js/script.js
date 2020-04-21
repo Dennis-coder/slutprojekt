@@ -26,7 +26,7 @@ function sendMessage(reciever) {
 	getTimestamp().then(time => {
 		time = time.split(" ");
 		messagesDiv = document.querySelector('.messages');
-		messagesDiv.innerHTML = `<div class='messageDiv centeredColumn space'><div class='message rightMessage'><p>${text}</p></div><span class="timestamp">${time[1].slice(0, 5)}, ${time[0]}</span></div>` + messagesDiv.innerHTML;
+		messagesDiv.innerHTML += `<div class='messageDiv centeredColumn space'><div class='message rightMessage'><p>${text}</p></div><span class="timestamp">${time[1].slice(0, 5)}, ${time[0]}</span></div>`;
 	})
 	document.querySelector('.text').value = ``;
 }
@@ -42,54 +42,120 @@ function sendGroupMessage(reciever) {
 	document.querySelector('.text').value = ``;
 }
 
-function startChecker(id, friendId) {
-	setInterval(showMessages, 200, id, friendId);
+function startChecker(friendId) {
+	scrollToBottom()
+	setInterval(showMessages, 200, friendId);
 }
 
-function showMessages(id, friendId) {
+function showMessages(friendId) {
 	latest = document.querySelector('.timestampChecker').value;
-	console.log(latest)
 	getNewMessages(friendId, latest).then(messages => {
 		for (i in messages){
 			message = messages[i]
 			time = message['timestamp'].split(" ");
 			messagesDiv = document.querySelector('.messages');
-			messagesDiv.innerHTML = `<div class='messageDiv centeredColumn space'><div class='message leftMessage'><p>${message['text']}</p></div><span class="timestamp">${time[1].slice(0, 5)}, ${time[0]}</span></div>` + messagesDiv.innerHTML;
+			messagesDiv.innerHTML += `<div class='messageDiv centeredColumn space'><div class='message leftMessage'><p>${message['text']}</p></div><span class="timestamp">${time[1].slice(0, 5)}, ${time[0]}</span></div>`;
 			document.querySelector('.timestampChecker').value = message['timestamp'];
 		}
 	})
 }	
 
+function startGroupChecker(groupId) {
+	scrollToBottom()
+	setInterval(showGroupMessages, 200, groupId);
+}
+
+function showGroupMessages(groupId) {
+	latest = document.querySelector('.timestampChecker').value;
+	getNewGroupMessages(groupId, latest).then(messages => {
+		for (i in messages){
+			message = messages[i]
+			time = message['timestamp'].split(" ");
+			messagesDiv = document.querySelector('.messages');
+			messagesDiv.innerHTML += `<div class='messageDiv centeredColumn space'><p>${message['sender']}</p><div class='message leftMessage'><p>${message['text']}</p></div><span class="timestamp">${time[1].slice(0, 5)}, ${time[0]}</span></div>`;
+			document.querySelector('.timestampChecker').value = message['timestamp'];
+		}
+	})
+}
+
+function scrollToBottom(){
+    var element = document.querySelector(".messages");
+    element.scrollTop = element.scrollHeight;
+}
+
+function changePassword(){
+	document.querySelector('.password').classList.toggle("hidden");
+}
+
+function reportUser(){
+	document.querySelector('.report').classList.toggle("hidden");
+}
+
+function deleteConfirm(id){
+	if (confirm(`Press OK if you wish to proceed and delete your account`) == true){
+		deleteUser(id);
+	}
+}
+
+function toggleReports(){
+	document.querySelector('.reports	').classList.toggle("hidden");
+}
+
+function adminDeleteUser(){
+	var name = prompt("Please enter their name:");
+	if (name != null){
+		if (confirm(`Press OK if you wish to proceed and delete ${name}'s account`) == true){
+			getId(name).then(id => {
+				deleteUser(id);
+			})
+		}
+	}
+}
+
 async function getNewMessages(id, latest) {
-	const response = await fetch(`http://localhost:9292/api/v1/messages/${id}/${latest}`);
+	const response = await fetch(`http://localhost:9292/api/messages/${id}/${latest}`);
 	return await response.json();
 }	
 
+async function getNewGroupMessages(id, latest) {
+	const response = await fetch(`http://localhost:9292/api/group_messages/${id}/${latest}`);
+	return await response.json();
+}
+
 async function getId(username) {
-	const response = await fetch(`http://localhost:9292/api/v1/get/id/${username}`);
+	const response = await fetch(`http://localhost:9292/api/get/id/${username}`);
 	return response.json();
 }	
 
 async function sendMessageToDB(reciever, text) {
-	await fetch(`http://localhost:9292/api/v1/message/send/${text}/${reciever}`)
+	await fetch(`http://localhost:9292/api/message/send/${text}/${reciever}`)
 }
 
 async function sendGroupMessageToDB(reciever, text) {
-	await fetch(`http://localhost:9292/api/v1/group_message/send/${text}/${reciever}`)
+	await fetch(`http://localhost:9292/api/group_message/send/${text}/${reciever}`)
 }
 
 async function getTimestamp(){
-	const response = await fetch(`http://localhost:9292/api/v1/get/timestamp`);
+	const response = await fetch(`http://localhost:9292/api/get/timestamp`);
 	return response.json();
 }
 
 async function request(id, action) {
 	if (action == `Send`){
-		await fetch(`http://localhost:9292/api/v1/requests/${id}/send`);
+		await fetch(`http://localhost:9292/api/requests/${id}/send`);
 	} else if (action ==`Accept`) {
 		await fetch(`http://localhost:9292/api/v1/requests/${id}/accept`);
 	} else {
 		await fetch(`http://localhost:9292/api/v1/requests/${id}/delete`);
 	}
 	location.reload();
+}
+
+async function deleteUser(id){
+	await fetch(`http://localhost:9292/api/admin/delete_user/${id}`);
+	location.reload()
+}
+async function removeReport(report_id){
+	await fetch(`http://localhost:9292/api/admin/remove_report/${report_id}`)
+	location.reload()
 }

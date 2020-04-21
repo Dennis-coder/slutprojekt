@@ -1,0 +1,13 @@
+div class='container admin centeredColumn' 
+    
+    a class='space option' onclick="toggleReports()" 
+        h2 View reports
+
+    div class='reports hidden scroll'
+        -for report in reports
+            div class='report centeredColumn'
+                h2 = "#{User.username(report.accuser)} reported #{User.username(report.accused)}"
+                p = report.reason
+                button onclick='removeReport(#{report.id})' Remove report
+    
+    button class='space' onclick="adminDeleteUser()" Delete an account

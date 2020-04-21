@@ -10,6 +10,8 @@ class User < DBEntity
             @password_hash = properties['password_hash']
             @admin = properties['admin']
             @signupdate = properties['signupdate']
+        else
+            return nil
         end
     end
     
@@ -65,9 +67,18 @@ class User < DBEntity
     end
 
     def self.add(params)
-        db.execute("INSERT INTO users (username, password_hash, sign_up_date, admin) VALUES(?,?,?,?)", params['username'], BCrypt::Password.create(params['plaintext']), "#{Time.now.utc}", 0)
+        db.execute("INSERT INTO users (username, password_hash, sign_up_date, admin) VALUES(?,?,?,?)", params['username'], BCrypt::Password.create(params['plaintext']), "#{Time.now}", 0)
 
         return User.new(nil, params['username'])
+    end
+
+    def self.change_password(id, password)
+        db.execute("UPDATE users SET password_hash = ? WHERE id = ?", BCrypt::Password.create(password), id)
+    end
+
+    def self.delete(id)
+        db.execute("UPDATE users SET username = ? WHERE id = ?", 'Deleted user', id)
+        db.execute("DELETE FROM reports WHERE accused = ?", id)
     end
     
 end

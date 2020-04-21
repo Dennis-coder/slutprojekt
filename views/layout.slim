@@ -16,6 +16,9 @@ html lang="en"
             -else 
                 a class="menuButton" href="/home/find_user" Find a user
                 a class="menuButton" href="/home/new_chat" New Group Chat
+                a class="menuButton" href="/home/settings" Settings
+                -if @user.admin == 1
+                    a class="menuButton" href="/home/admin" Admin Lounge
                 a class="menuButton" href="/logout" Logout
 
         header

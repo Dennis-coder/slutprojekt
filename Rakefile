@@ -1,18 +1,26 @@
+require_relative 'models/db_test.rb'
+result = DBTest.start
+
 task :seed do
-    ruby "seeder.rb"
+    if result == true
+        ruby "seeder.rb"
+    else
+        puts "Connection issues with the database"
+    end
 end
 
 task :run do
-    sh 'bundle exec rerun --ignore "*.{slim,js,css}" "rackup --host 0.0.0.0"'
+    # if result == true
+        sh 'bundle exec rerun --ignore "*.{slim,js,css}" "rackup --host 0.0.0.0"'
+    # else
+        # puts "Connection issues with the database"
+    # end
 end
 
-task :serverrun do
-    sh 'gem install sinatra'
-    sh 'gem install slim'
-    sh 'gem install sqlite3'
-    sh 'gem install wdm'
-    sh 'gem install rerun'
-    sh 'gem install bcrypt'
-    sh 'gem install localtunnel'
-    sh 'bundle exec rerun --ignore "*.{slim,js,css}" "rackup --host 0.0.0.0"'
-end
+#rake run
+#rake debug
+#rake seed
+#rake test:unit
+#rake test:acceptance
+
+#http://127.0.0.1:9292/

@@ -3,7 +3,11 @@ class Application < Sinatra::Base
     enable :sessions
 
 	before do 
-		# session[:user_id] = 1
+		p "hej"
+		if DBTest.start == false && session['db_connection'] != false
+			session['db_connection'] = false
+			redirect "/error"
+		end
 		if session['user_id'] != nil
 			@user = User.new(session['user_id'])
 		end
@@ -20,7 +24,26 @@ class Application < Sinatra::Base
 			redirect '/'
 		end
 	end
-	
+
+	before '/home/admin/?' do
+		if @user.admin != 1
+			redirect '/home'
+		end
+	end
+
+	before '/home/admin/*' do
+		if @user.admin != 1
+			redirect '/home'
+		end
+	end
+
+	before '/error' do
+		if DBTest.start == true
+			session['db_connection'] = true
+			redirect '/'
+		end
+	end
+
 	get '/?' do
 		if session['user_id'] != nil
 			redirect '/home'
@@ -28,19 +51,25 @@ class Application < Sinatra::Base
         slim :index
     end
 
-    get '/login/?' do
+	get '/login/?' do
         slim :login
     end
 
 	post '/login' do
-		result = Validator.login(params)
-		if result.is_a? Integer
-			session['user_id'] = result
-			redirect '/home'
+		login_cooldown = 3
+		if session['last_login'] == nil || (Time.now - session['last_login']) >= login_cooldown
+			result = Validator.login(params)
+			session['last_login'] = Time.now
+			if result.is_a? Integer
+				session['user_id'] = result
+				redirect '/home'
+			else
+				session['login_error'] = result
+			end
 		else
-			session['login_error'] = result
-			redirect '/login'
+			session['login_error'] = "You have to wait #{login_cooldown - (Time.now - session['last_login']).ceil} second(s) before trying again"
 		end
+		redirect '/login'
 	end
 
 	get '/register/?' do
@@ -73,9 +102,9 @@ class Application < Sinatra::Base
 	end
 
 	post '/home/friends/:reciever/send' do
-		if session['time_last_message'] == nil || (Time.now.utc - session['time_last_message']) >= 1
+		if session['time_last_message'] == nil || (Time.now - session['time_last_message']) >= 1
 			if Validator.message(params['message']) 
-				session['time_last_message'] = Time.now.utc
+				session['time_last_message'] = Time.now
 				Message.send(params, @user)
 			end
 		else
@@ -128,28 +157,68 @@ class Application < Sinatra::Base
 		end
 	end
 
-	get '/home/groups/:id' do
+	get '/home/groups/:id/?' do
 		group = Groupchat.new(params['id'])
 		slim :group, locals: {group: group}
 	end
 
-	get '/api/v1/get/id/:username' do
+	get '/home/settings/?' do
+		slim :settings
+	end
+
+	post '/home/settings/change_password' do
+		result = Validator.change_password(@user.password_hash, params)
+		if result == true
+			User.change_password(@user.id, params['new_password'])
+			session['settings_error'] = "The change was successful"
+		else
+			session['settings_error'] = result
+		end
+		redirect 'home/settings'
+	end
+
+	post '/home/settings/report' do
+		result = Validator.report(@user, params)
+		if result == true
+			Report.send(@user.id, params)
+			session['settings_error'] = "Your report has been sent"
+		else
+			session['settings_error'] = result
+		end
+		redirect 'home/settings'
+	end
+
+	get '/home/admin/?' do
+		reports = Report.get_all()
+		slim :admin, locals: {reports: reports}
+	end
+
+	get '/error/?' do 
+		slim :db_error
+	end
+
+	get '/api/get/id/:username' do
 		return User.id(params['username']).to_json
 	end
 
-	get '/api/v1/get/timestamp' do
-		return Time.now.utc.to_json
+	get '/api/get/timestamp' do
+		return Time.now.to_json
 	end
 
-	get '/api/v1/messages/:id/:latest' do
+	get '/api/messages/:id/:latest' do
 		messages = Friend.new_messages(@user.id, params)
 		return messages.to_json
 	end
 
-	get '/api/v1/message/send/:message/:reciever' do
-		if session['time_last_message'] == nil || (Time.now.utc - session['time_last_message']) >= 1
+	get '/api/group_messages/:group_id/:latest' do
+		messages = Groupchat.new_messages(@user.id, params)
+		return messages.to_json
+	end
+
+	get '/api/message/send/:message/:reciever' do
+		if session['time_last_message'] == nil || (Time.now - session['time_last_message']) >= 1
 			if Validator.message(params['message']) 
-				session['time_last_message'] = Time.now.utc
+				session['time_last_message'] = Time.now
 				Friend.send_message(params, @user)
 			end
 		else
@@ -157,10 +226,10 @@ class Application < Sinatra::Base
 		end
 	end
 
-	get '/api/v1/group_message/send/:message/:group_id' do
-		if session['time_last_message'] == nil || (Time.now.utc - session['time_last_message']) >= 1
+	get '/api/group_message/send/:message/:group_id' do
+		if session['time_last_message'] == nil || (Time.now - session['time_last_message']) >= 1
 			if Validator.message(params['message']) 
-				session['time_last_message'] = Time.now.utc
+				session['time_last_message'] = Time.now
 				Groupchat.send_message(params, @user)
 			end
 		else
@@ -168,16 +237,27 @@ class Application < Sinatra::Base
 		end
 	end
 
-	get '/api/v1/requests/:user_id/send' do
+	get '/api/requests/:user_id/send' do
 		Friend.send_request(@user.id, params['user_id'].to_i)
 	end
 
-	get '/api/v1/requests/:user_id/accept' do
+	get '/api/requests/:user_id/accept' do
 		Friend.accept_request(@user.id, params['user_id'])
 	end
 
-	get '/api/v1/requests/:user_id/delete' do
+	get '/api/requests/:user_id/delete' do
 		Friend.delete(@user.id, params['user_id'])
+	end
+
+	get '/api/admin/delete_user/:id' do
+		if params['id'] == session['user_id']
+			session.delete('user_id')
+		end
+		User.delete(params['id'])
+	end
+
+	get '/api/admin/remove_report/:id' do
+		Report.delete(params['id'])
 	end
 
 end

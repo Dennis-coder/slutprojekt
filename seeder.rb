@@ -22,6 +22,7 @@ class Seeder
         db.execute("DROP TABLE IF EXISTS groups")
         db.execute("DROP TABLE IF EXISTS groups_handler")
         db.execute("DROP TABLE IF EXISTS groups_messages")
+        db.execute("DROP TABLE IF EXISTS reports")
     end
 
     def self.create_tables(db)
@@ -39,7 +40,6 @@ class Seeder
                 "id" INTEGER PRIMARY KEY AUTOINCREMENT,
                 "text" TEXT NOT NULL,
                 "timestamp" TEXT NOT NULL,
-                "status" INTEGER NOT NULL,
                 "sender_id" INTEGER NOT NULL,
                 "reciever_id" INTEGER NOT NULL
             );
@@ -77,13 +77,21 @@ class Seeder
                 "sender_id" INTEGER NOT NULL
             );
         SQL
+        db.execute <<-SQL
+            CREATE TABLE "reports" (
+                "id" INTEGER PRIMARY KEY AUTOINCREMENT,
+                "accused" INTEGER NOT NULL,
+                "accuser" INTEGER NOT NULL,
+                "reason" TEXT NOT NULL
+            );
+        SQL
     end
 
     def self.populate_tables(db)
         users = [
-            {username: "1", password_hash: BCrypt::Password.create("1"), sign_up_date: "#{Time.now.utc}", admin: 1},
-            {username: "2", password_hash: BCrypt::Password.create("2"), sign_up_date: "#{Time.now.utc}", admin: 0},
-            {username: "3", password_hash: BCrypt::Password.create("3"), sign_up_date: "#{Time.now.utc}", admin: 0}
+            {username: "1", password_hash: BCrypt::Password.create("1"), sign_up_date: "#{Time.now}", admin: 1},
+            {username: "2", password_hash: BCrypt::Password.create("2"), sign_up_date: "#{Time.now}", admin: 0},
+            {username: "3", password_hash: BCrypt::Password.create("3"), sign_up_date: "#{Time.now}", admin: 0}
         ]
 
         users.each do |user|
@@ -91,19 +99,19 @@ class Seeder
         end
 
         messages = [
-            {text: "Message test 1", status: 1, sender_id: 3, reciever_id: 1},
-            {text: "Message test 2", status: 1, sender_id: 2, reciever_id: 1},
-            {text: "Message test 3", status: 1, sender_id: 2, reciever_id: 1},
-            {text: "Message test 4", status: 1, sender_id: 2, reciever_id: 1}
+            {text: "Message test 1", sender_id: 3, reciever_id: 1},
+            {text: "Message test 2", sender_id: 2, reciever_id: 1},
+            {text: "Message test 3", sender_id: 2, reciever_id: 1},
+            {text: "Message test 4", sender_id: 2, reciever_id: 1}
         ]
 
         messages.each do |message|
-            db.execute("INSERT INTO messages (text, timestamp, status, sender_id, reciever_id) VALUES(?,?,?,?,?)", message[:text], "#{Time.now.utc}", 1, message[:sender_id], message[:reciever_id])
+            db.execute("INSERT INTO messages (text, timestamp, sender_id, reciever_id) VALUES(?,?,?,?)", message[:text], "#{Time.now}", message[:sender_id], message[:reciever_id])
         end
 
         friends = [
-            {user_id: 1, user2_id: 2, status: 0, last_interaction: "#{Time.now.utc}", friends_since: "#{Time.now.utc}"},
-            {user_id: 3, user2_id: 1, status: 1, last_interaction: "#{Time.now.utc}", friends_since: "#{Time.now.utc}"}
+            {user_id: 1, user2_id: 2, status: 0, last_interaction: "#{Time.now}", friends_since: "#{Time.now}"},
+            {user_id: 3, user2_id: 1, status: 1, last_interaction: "#{Time.now}", friends_since: "#{Time.now}"}
         ]
 
         friends.each do |friend|
@@ -135,17 +143,17 @@ class Seeder
             );
         SQL
         users = [
-            {username: "1", password_hash: BCrypt::Password.create("1"), sign_up_date: "#{Time.now.utc}", admin: 1},
-            {username: "2", password_hash: BCrypt::Password.create("2"), sign_up_date: "#{Time.now.utc}", admin: 0},
-            {username: "3", password_hash: BCrypt::Password.create("3"), sign_up_date: "#{Time.now.utc}", admin: 0}
+            {username: "1", password_hash: BCrypt::Password.create("1"), sign_up_date: "#{Time.now}", admin: 1},
+            {username: "2", password_hash: BCrypt::Password.create("2"), sign_up_date: "#{Time.now}", admin: 0},
+            {username: "3", password_hash: BCrypt::Password.create("3"), sign_up_date: "#{Time.now}", admin: 0}
         ]
 
         users.each do |user|
             db.execute("INSERT INTO users (username, password_hash, sign_up_date, admin) VALUES(?,?,?,?)", user[:username], user[:password_hash], user[:sign_up_date], user[:admin])
         end
         friends = [
-            {user_id: 1, user2_id: 2, status: 0, last_interaction: "#{Time.now.utc}", friends_since: "#{Time.now.utc}"},
-            {user_id: 3, user2_id: 1, status: 1, last_interaction: "#{Time.now.utc}", friends_since: "#{Time.now.utc}"}
+            {user_id: 1, user2_id: 2, status: 0, last_interaction: "#{Time.now}", friends_since: "#{Time.now}"},
+            {user_id: 3, user2_id: 1, status: 1, last_interaction: "#{Time.now}", friends_since: "#{Time.now}"}
         ]
 
         friends.each do |friend|
@@ -175,7 +183,7 @@ class Seeder
         ]
 
         messages.each do |message|
-            db.execute("INSERT INTO messages (text, image, timestamp, status, sender_id, reciever_id) VALUES(?,?,?,?,?,?)", message[:text], "", "#{Time.now.utc}", 1, message[:sender_id], message[:reciever_id])
+            db.execute("INSERT INTO messages (text, image, timestamp, status, sender_id, reciever_id) VALUES(?,?,?,?,?,?)", message[:text], "", "#{Time.now}", 1, message[:sender_id], message[:reciever_id])
         end
     end
 end

@@ -113,6 +113,10 @@ input{
     display: none;
 }
 
+.scroll{
+    overflow: auto;
+}
+
 
 /* Header css */
 header{
@@ -213,14 +217,14 @@ nav.show{
     height: 100%;
 } 
 
-.messagesOption{
+.option{
     padding: 0.5rem 2rem;
     text-decoration: none;
     color: black;
     /* border: rgb(100,100,100) 1px solid; */
 }
 
-.messagesOption:hover{
+.option:hover{
     background: rgb(235,235,235);
 }
 
@@ -229,7 +233,6 @@ nav.show{
 }
 
 .friends {
-    overflow: auto;
     max-height: 75vh;
     width: 25rem;
 }
@@ -253,7 +256,6 @@ nav.show{
 
 .messages{
     width: 25rem;
-    overflow: auto;
     max-height: 75vh;
 }
 
@@ -337,4 +339,17 @@ nav.show{
     flex-direction: row;
     align-items: center;
     justify-content: space-between;
+}
+
+
+/* Settings css */
+.settings a:hover h2{
+    text-decoration: underline;
+}
+
+
+/* Admin css */
+.reports{
+    max-height: 20rem;
+    width: 25rem;
 }

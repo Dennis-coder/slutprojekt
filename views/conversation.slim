@@ -5,10 +5,10 @@ div class='container conversation centeredColumn'
 
     div class='space centeredRow'
         input class='text' placeholder='Write message here...'
-        button onClick="sendMessage(#{friend.id})" Send
+        button onClick="sendMessage(#{friend.id}, #{@user.username})" Send
         -p friend.id
 
-    div class='messages'
+    div class='messages scroll'
         -for message in friend.messages
             div class='messageDiv centeredColumn space'
                 -if message.sender_id == @user.id
@@ -19,9 +19,9 @@ div class='container conversation centeredColumn'
                         p #{message.text}
                 -time = message.timestamp.split
                 span class="timestamp"  #{time[1][0..4]}, #{time[0]}
-    -if friend.messages.first != nil
-        body onload="startChecker(#{@user.id}, #{friend.id})"
-        input class='timestampChecker' value='#{friend.messages.first.timestamp}'
+    
+    body onload="startChecker(#{friend.id})"
+    -if friend.messages.last != nil
+        input class='timestampChecker hidden' value='#{friend.messages.last.timestamp}'
     -else
-        body onload="messageCheck(#{@user.id}, #{friend.id})"
-        input class='timestampChecker' value='#{Time.now.utc}'
+        input class='timestampChecker hidden' value='#{Time.now}'

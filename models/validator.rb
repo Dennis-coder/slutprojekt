@@ -57,4 +57,34 @@ class Validator
         end
     end
 
+    def self.change_password(password_hash, params)
+        if BCrypt::Password.new(password_hash) == params['current_password']
+            if params['new_password'] == params['confirm_password']
+                return true
+            else
+                return 'The new passwords do not match'
+            end
+        else
+            return 'Wrong password'
+        end
+    end
+
+    def self.report(user, params)
+        if Validator.message(params['username']) == false || Validator.message(params['reason']) == false
+            return "Please fill out every box"
+        else
+            accused = User.new(nil, params['username'])
+            if accused.username == nil 
+                return "That username does not exist"
+            elsif params['username'] == user.username
+                return "You cannot report yourseld"
+            end
+        end
+        return true
+    end
+
+    def self.db()
+        
+    end
+
 end

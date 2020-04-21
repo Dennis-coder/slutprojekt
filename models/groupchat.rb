@@ -14,7 +14,7 @@ class Groupchat < DBEntity
     def self.create(list)
         name = list.first.last
         list.delete('group_name')
-        db.execute("INSERT INTO groups (name, created_at, last_interaction) VALUES(?,?,?)", name, "#{Time.now.utc}", "#{Time.now.utc}")
+        db.execute("INSERT INTO groups (name, created_at, last_interaction) VALUES(?,?,?)", name, "#{Time.now}", "#{Time.now}")
         id = db.execute("SELECT id FROM groups").last['id']
         list.each do |user|
             Groupchat.add_user(user.last, id)
@@ -27,13 +27,30 @@ class Groupchat < DBEntity
     end
 
     def self.send_message(params, user)
-        db.execute("INSERT INTO groups_messages (text, timestamp, sender_id, group_id) VALUES(?,?,?,?)", params['message'], "#{Time.now.utc}", user.id, params['group_id'])
+        db.execute("INSERT INTO groups_messages (text, timestamp, sender_id, group_id) VALUES(?,?,?,?)", params['message'], "#{Time.now}", user.id, params['group_id'])
         
-        db.execute("UPDATE groups SET last_interaction = ? WHERE id = ?", "#{Time.now.utc}", params['group_id'])
+        db.execute("UPDATE groups SET last_interaction = ? WHERE id = ?", "#{Time.now}", params['group_id'])
     end
 
     def messages()
-        db.execute("SELECT * FROM groups_messages WHERE group_id = ?", @id).reverse
+        hash_list = db.execute("SELECT * FROM groups_messages WHERE group_id = ?", @id)
+        list = []
+        hash_list.each do |hash|
+            list << Message.new(hash['id'], 'group')
+        end
+        return list
+    end
+
+    def self.new_messages(user_id, params)
+        group = Groupchat.new(params['group_id'].to_i)
+        latest = params['latest']
+        newMessages = []
+        group.messages.each do |message|
+            if !Sorter.timestamp_compare(latest, message.timestamp) && message.sender_id != user_id
+                newMessages << {'text' => message.text, 'timestamp' => message.timestamp, 'sender' => User.username(message.sender_id)}
+            end
+        end
+        return newMessages
     end
 
 end

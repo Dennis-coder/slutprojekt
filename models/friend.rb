@@ -19,15 +19,15 @@ class Friend < DBEntity
         hash_list = db.execute("SELECT id FROM messages WHERE (reciever_id = ? AND sender_id = ?) OR (reciever_id = ? AND sender_id = ?) ORDER BY timestamp", user_id, @id, @id, user_id)
         list = []
         hash_list.each do |hash|
-            list << Message.new(hash['id'])
+            list << Message.new(hash['id'], 'friend')
         end
-        return list.reverse
+        return list
     end
 
     def self.send_message(params, user)
-        db.execute("INSERT INTO messages (text, timestamp, status, sender_id, reciever_id) VALUES(?,?,?,?,?)", params['message'], "#{Time.now.utc}", 1, user.id, params['reciever'])
+        db.execute("INSERT INTO messages (text, timestamp, sender_id, reciever_id) VALUES(?,?,?,?)", params['message'], "#{Time.now}", user.id, params['reciever'])
         
-        db.execute("UPDATE friends SET last_interaction = ? WHERE id = ?", "#{Time.now.utc}", Friend.relation_id(user.id, params['reciever']))
+        db.execute("UPDATE friends SET last_interaction = ? WHERE id = ?", "#{Time.now}", Friend.relation_id(user.id, params['reciever']))
     end
 
     def self.conversation(id1, id2)
@@ -38,11 +38,11 @@ class Friend < DBEntity
     end
 
     def self.send_request(user_id, user2_id)
-        db.execute("INSERT INTO friends (user_id, user2_id, status, last_interaction, friends_since) VALUES(?,?,?,?,?)", user_id, user2_id, 1, "#{Time.now.utc}", "")
+        db.execute("INSERT INTO friends (user_id, user2_id, status, last_interaction, friends_since) VALUES(?,?,?,?,?)", user_id, user2_id, 1, "#{Time.now}", "")
     end
 
     def self.accept_request(user_id, user2_id)
-        db.execute("UPDATE friends SET status = ?, last_interaction = ?, friends_since = ? WHERE id = ?", 0, "#{Time.now.utc}", "#{Time.now.utc}", Friend.relation_id(user_id, user2_id))
+        db.execute("UPDATE friends SET status = ?, last_interaction = ?, friends_since = ? WHERE id = ?", 0, "#{Time.now}", "#{Time.now}", Friend.relation_id(user_id, user2_id))
     end
 
     def self.pending_requests(id)
@@ -119,7 +119,6 @@ class Friend < DBEntity
                 newMessages << {'text' => message.text, 'timestamp' => message.timestamp, 'sender' => User.username(message.sender_id)}
             end
         end
-        # return "hej"
         return newMessages
     end
 

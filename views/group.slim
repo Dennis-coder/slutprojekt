@@ -4,18 +4,31 @@ div class='container conversation centeredColumn'
     p = session['message_error']
     -session.delete('message_error') 
 
+    div class='messages scroll'
+        -prev_message = nil
+        -for message in group.messages
+            div class='messageDiv centeredColumn space'
+                -if prev_message == nil || message.sender_id != prev_message.sender_id
+                    -if message.sender_id == @user.id
+                        p class='space' Me
+                    -else
+                        p class='space' = User.username(message.sender_id)
+                -if message.sender_id == @user.id
+                    div class='message rightMessage'
+                        p #{message.text}
+                -else 
+                    div class='message leftMessage'
+                        p #{message.text}
+                -time = message.timestamp.split
+                span class="timestamp"  #{time[1][0..4]}, #{time[0]}
+            -prev_message = message
+
     div class='space centeredRow'
         input class='text' placeholder='Write message here...'
         button onClick='sendGroupMessage(#{group.id})' Send
-
-    div class='messages'
-        -for message in group.messages
-            div class='messageDiv centeredColumn space'
-                -if message['sender_id'] == @user.id
-                    div class='message rightMessage'
-                        p #{message['text']}
-                -else 
-                    div class='message leftMessage'
-                        p #{message['text']}
-                -time = message['timestamp'].split
-                span class="timestamp"  #{time[1][0..4]}, #{time[0]}
+    
+    body onload="startGroupChecker(#{group.id})"
+    -if group.messages.last != nil
+        input class='timestampChecker hidden' value='#{group.messages.last.timestamp}'
+    -else
+        input class='timestampChecker hidden' value='#{Time.now}'
