@@ -1,34 +1,29 @@
-div class='container conversation centeredColumn' 
+div class='container conversation centered-column' 
     h1 = group.name
     
     p = session['message_error']
     -session.delete('message_error') 
 
     div class='messages scroll'
-        -prev_message = nil
         -for message in group.messages
-            div class='messageDiv centeredColumn space'
-                -if prev_message == nil || message.sender_id != prev_message.sender_id
-                    -if message.sender_id == @user.id
-                        p class='space' Me
-                    -else
-                        p class='space' = User.username(message.sender_id)
+            -if message.sender_id != @user.id
+                p class='' = User.username(message.sender_id)
+            div class='message-div centered-column'
                 -if message.sender_id == @user.id
-                    div class='message rightMessage'
+                    div class='message right-message'
                         p #{message.text}
                 -else 
-                    div class='message leftMessage'
+                    div class='message left-message'
                         p #{message.text}
                 -time = message.timestamp.split
                 span class="timestamp"  #{time[1][0..4]}, #{time[0]}
-            -prev_message = message
 
-    div class='space centeredRow'
-        input class='text' placeholder='Write message here...'
-        button onClick='sendGroupMessage(#{group.id})' Send
+    div class='space centered-row'
+        input name='msg' class='text' placeholder='Write message here...'
+        button#send-msg onClick='sendGroupMessage(#{group.id})' Send
     
     body onload="startGroupChecker(#{group.id})"
     -if group.messages.last != nil
-        input class='timestampChecker hidden' value='#{group.messages.last.timestamp}'
+        input class='timestamp-checker hidden' value='#{group.messages.last.timestamp}'
     -else
-        input class='timestampChecker hidden' value='#{Time.now}'
+        input class='timestamp-checker hidden' value='#{Time.now}'

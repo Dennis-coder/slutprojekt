@@ -5,6 +5,6 @@ require 'capybara/minitest'
 require 'capybara/minitest/spec'
 require 'rack/test'
 
-Capybara.app = App
+Capybara.app = Application
 Capybara.default_driver = :selenium_chrome
 Capybara.server = :webrick

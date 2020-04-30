@@ -4,8 +4,8 @@ function toggleMenu() {
 
 function viewFriends() {
 	if (document.querySelector('.active').innerHTML == `Groups`){
-		document.querySelector('.viewFriends').classList.toggle("active");
-		document.querySelector('.viewGroups').classList.toggle("active");
+		document.querySelector('.view-friends').classList.toggle("active");
+		document.querySelector('.view-groups').classList.toggle("active");
 		document.querySelector('.friends').classList.toggle("hidden");
 		document.querySelector('.groups').classList.toggle("hidden");
 	}
@@ -13,8 +13,8 @@ function viewFriends() {
 
 function viewGroups() {
 	if (document.querySelector('.active').innerHTML == `Friends`){
-		document.querySelector('.viewFriends').classList.toggle("active");
-		document.querySelector('.viewGroups').classList.toggle("active");
+		document.querySelector('.view-friends').classList.toggle("active");
+		document.querySelector('.view-groups').classList.toggle("active");
 		document.querySelector('.friends').classList.toggle("hidden");
 		document.querySelector('.groups').classList.toggle("hidden");
 	}
@@ -22,24 +22,26 @@ function viewGroups() {
 
 function sendMessage(reciever) {
 	text = document.querySelector('.text').value;
-	sendMessageToDB(reciever, text);
+	sendMessageToDB(reciever, text, `friend`);
 	getTimestamp().then(time => {
 		time = time.split(" ");
 		messagesDiv = document.querySelector('.messages');
-		messagesDiv.innerHTML += `<div class='messageDiv centeredColumn space'><div class='message rightMessage'><p>${text}</p></div><span class="timestamp">${time[1].slice(0, 5)}, ${time[0]}</span></div>`;
+		messagesDiv.innerHTML += `<div class='message-div centered-column space'><div class='message right-message'><p>${text}</p></div><span class="timestamp">${time[1].slice(0, 5)}, ${time[0]}</span></div>`;
 	})
 	document.querySelector('.text').value = ``;
+	scrollToBottom()
 }
 
 function sendGroupMessage(reciever) {
 	text = document.querySelector('.text').value;
-	sendGroupMessageToDB(reciever, text);
+	sendMessageToDB(reciever, text, `group`);
 	getTimestamp().then(time => {
 		time = time.split(" ");
 		messagesDiv = document.querySelector('.messages');
-		messagesDiv.innerHTML = `<div class='messageDiv centeredColumn space'><div class='message rightMessage'><p>${text}</p></div><span class="timestamp">${time[1].slice(0, 5)}, ${time[0]}</span></div>` + messagesDiv.innerHTML;
+		messagesDiv.innerHTML += `<div class='message-div centered-column space'><div class='message right-message'><p>${text}</p></div><span class="timestamp">${time[1].slice(0, 5)}, ${time[0]}</span></div>`;
 	})
 	document.querySelector('.text').value = ``;
+	scrollToBottom()
 }
 
 function startChecker(friendId) {
@@ -56,6 +58,7 @@ function showMessages(friendId) {
 			messagesDiv = document.querySelector('.messages');
 			messagesDiv.innerHTML += `<div class='messageDiv centeredColumn space'><div class='message leftMessage'><p>${message['text']}</p></div><span class="timestamp">${time[1].slice(0, 5)}, ${time[0]}</span></div>`;
 			document.querySelector('.timestampChecker').value = message['timestamp'];
+			scrollToBottom()
 		}
 	})
 }	
@@ -72,8 +75,9 @@ function showGroupMessages(groupId) {
 			message = messages[i]
 			time = message['timestamp'].split(" ");
 			messagesDiv = document.querySelector('.messages');
-			messagesDiv.innerHTML += `<div class='messageDiv centeredColumn space'><p>${message['sender']}</p><div class='message leftMessage'><p>${message['text']}</p></div><span class="timestamp">${time[1].slice(0, 5)}, ${time[0]}</span></div>`;
+			messagesDiv.innerHTML += `<p>${message['sender']}</p><div class='messageDiv centeredColumn'><div class='message leftMessage'><p>${message['text']}</p></div><span class="timestamp">${time[1].slice(0, 5)}, ${time[0]}</span></div>`;
 			document.querySelector('.timestampChecker').value = message['timestamp'];
+			scrollToBottom()
 		}
 	})
 }
@@ -83,11 +87,11 @@ function scrollToBottom(){
     element.scrollTop = element.scrollHeight;
 }
 
-function changePassword(){
+function togglePasswordChange(){
 	document.querySelector('.password').classList.toggle("hidden");
 }
 
-function reportUser(){
+function toggleUserReport(){
 	document.querySelector('.report').classList.toggle("hidden");
 }
 
@@ -98,7 +102,7 @@ function deleteConfirm(id){
 }
 
 function toggleReports(){
-	document.querySelector('.reports	').classList.toggle("hidden");
+	document.querySelector('.reports').classList.toggle("hidden");
 }
 
 function adminDeleteUser(){
@@ -127,12 +131,8 @@ async function getId(username) {
 	return response.json();
 }	
 
-async function sendMessageToDB(reciever, text) {
-	await fetch(`http://localhost:9292/api/message/send/${text}/${reciever}`)
-}
-
-async function sendGroupMessageToDB(reciever, text) {
-	await fetch(`http://localhost:9292/api/group_message/send/${text}/${reciever}`)
+async function sendMessageToDB(reciever, text, type) {
+	await fetch(`http://localhost:9292/api/message/send/${type}/${text}/${reciever}`)
 }
 
 async function getTimestamp(){
@@ -144,9 +144,9 @@ async function request(id, action) {
 	if (action == `Send`){
 		await fetch(`http://localhost:9292/api/requests/${id}/send`);
 	} else if (action ==`Accept`) {
-		await fetch(`http://localhost:9292/api/v1/requests/${id}/accept`);
+		await fetch(`http://localhost:9292/api/requests/${id}/accept`);
 	} else {
-		await fetch(`http://localhost:9292/api/v1/requests/${id}/delete`);
+		await fetch(`http://localhost:9292/api/requests/${id}/delete`);
 	}
 	location.reload();
 }

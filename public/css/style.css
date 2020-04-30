@@ -95,14 +95,14 @@ input{
     font-size: 1rem;
 }
 
-.centeredRow{
+.centered-row{
     display: flex;
     align-items: center;
     justify-content: center;
     flex-direction: row;
 }
 
-.centeredColumn{
+.centered-column{
     display: flex;
     align-items: center;
     justify-content: center;
@@ -178,16 +178,16 @@ nav.show{
     transition: all 0.5s;
 }
 
-.menuButton{
+.menu-button{
     color: white;
     text-decoration: none;
 }
 
-.menuButton:hover{
+.menu-button:hover{
     text-decoration: underline;
 }
 
-.menuButton:active{
+.menu-button:active{
     text-shadow: 1px 1px rgba(255,255,255, 0.6);
 }
 
@@ -259,8 +259,9 @@ nav.show{
     max-height: 75vh;
 }
 
-.messageDiv{
+.message-div{
     width: 100%;
+    margin: 0.1rem 0;
 }
 
 .message{
@@ -273,11 +274,11 @@ nav.show{
     padding: 0.4rem;
 }
 
-.messageDiv .timestamp{
+.message-div .timestamp{
     display: none;
 }
 
-.messageDiv:active .timestamp{
+.message-div:active .timestamp{
     display: initial;
 }
 
@@ -286,32 +287,32 @@ nav.show{
     word-break: break-all;
 }
 
-.rightMessage{
+.right-message{
     align-self: flex-end;
     background: radial-gradient(rgb(100,100,255), rgb(70,70,230));
 }
 
-.leftMessage{
+.left-message{
     align-self: flex-start;
     background: radial-gradient(rgb(255,255,255), rgb(220,220,220));
 }
 
-.rightMessage p{
+.right-message p{
     color: rgb(245, 245, 245);
 }
 
 
 /* Searchbar css */
-.searchBar{
+.search-bar{
     margin: 0;
 }
 
 
-.searchBar form button{
+.search-bar form button{
     width: 2.4rem;
 }
 
-.searchBar form input{
+.search-bar form input{
     margin: 0;
 }
 
@@ -321,20 +322,20 @@ nav.show{
     max-width: 30rem;
 }
 
-.resultButtons{
+.result-buttons{
     width: auto;
     display: flex;
     flex-direction: row;
     justify-content: space-between;
 }
 
-.result_buttons button{
+.result-buttons button{
     margin: 0 1rem;
 }
 
 
 /* Group css */
-.groupOption{
+.group-option{
     display: flex;
     flex-direction: row;
     align-items: center;

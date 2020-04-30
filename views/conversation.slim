@@ -1,27 +1,26 @@
-div class='container conversation centeredColumn' 
+div class='container conversation centered-column' 
     h1 Your conversation with #{friend.username}
     p = session['message_error']
     -session.delete('message_error') 
 
-    div class='space centeredRow'
-        input class='text' placeholder='Write message here...'
-        button onClick="sendMessage(#{friend.id}, #{@user.username})" Send
-        -p friend.id
-
     div class='messages scroll'
         -for message in friend.messages
-            div class='messageDiv centeredColumn space'
+            div class='message-div centered-column space'
                 -if message.sender_id == @user.id
-                    div class='message rightMessage'
+                    div class='message right-message'
                         p #{message.text}
                 -else 
-                    div class='message leftMessage'
+                    div class='message left-message'
                         p #{message.text}
                 -time = message.timestamp.split
                 span class="timestamp"  #{time[1][0..4]}, #{time[0]}
+
+    div class='space centered-row'
+        input class='text' placeholder='Write message here...'
+        button onClick="sendMessage(#{friend.id}, #{@user.username})" Send
     
     body onload="startChecker(#{friend.id})"
     -if friend.messages.last != nil
-        input class='timestampChecker hidden' value='#{friend.messages.last.timestamp}'
+        input class='timestamp-checker hidden' value='#{friend.messages.last.timestamp}'
     -else
-        input class='timestampChecker hidden' value='#{Time.now}'
+        input class='timestamp-checker hidden' value='#{Time.now}'

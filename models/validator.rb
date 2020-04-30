@@ -3,12 +3,14 @@ class Validator
     def self.login(params)
         username = params['username']
         plaintext = params['plaintext']
-        user = User.new(nil, username) 
-		if user.id == nil
-			return "Wrong username or password"
+        begin
+            user_id = User.id(username)
+		rescue
+            return "Wrong username or password"
         end
+        user = User.get(user_id)
         if BCrypt::Password.new(user.password_hash) == plaintext
-			return user.id
+			return user_id
 		else
 			return "Wrong username or password"
 		end
@@ -19,7 +21,6 @@ class Validator
         plaintext = params['plaintext']
         plaintext_confirm = params['plaintext_confirm']
         allowed_chars = ["a","b","c","d","e","f","g","h","i","j","k","l","m","n","o","p","q","r","s","t","u","v","w","x","y","z","1","2","3","4","5","6","7","8","9","0"]
-        user = User.new(nil, username)
         username.downcase.each_char do |char|
             if allowed_chars.index(char) == nil
                 return "No special characters, only a-z and 0-9 are allowed"
@@ -30,17 +31,20 @@ class Validator
                 return "No special characters, only a-z and 0-9 are allowed"
             end
         end
-        if user.username != nil
-            return "A user with that name already exists"
-        elsif username.length < 1 || username.length > 16
-            return "Username has to be between 1-16 characters"
-        elsif plaintext.length < 5
-            return "Password has to be 5 characters or more"
-		elsif plaintext != plaintext_confirm
-			return "Passwords are not the same"
-        else
-            return true
+        begin
+            user_id = User.id(username)
+        rescue
+            if username.length < 1 || username.length > 16
+                return "Username has to be between 1-16 characters"
+            elsif plaintext.length < 5
+                return "Password has to be 5 characters or more"
+            elsif plaintext != plaintext_confirm
+                return "Passwords are not the same"
+            else
+                return true
+            end
         end
+        return "A user with that name already exists"
     end
 
     def self.message(text)
@@ -73,11 +77,10 @@ class Validator
         if Validator.message(params['username']) == false || Validator.message(params['reason']) == false
             return "Please fill out every box"
         else
-            accused = User.new(nil, params['username'])
-            if accused.username == nil 
+            if User.id(params['username']) == nil 
                 return "That username does not exist"
             elsif params['username'] == user.username
-                return "You cannot report yourseld"
+                return "You cannot report yourself"
             end
         end
         return true

@@ -1,7 +1,6 @@
-require 'byebug'
 require_relative "acceptance_helper"
 
-class ActivityLogSpec < Minitest::Spec 
+class Tests < Minitest::Spec 
     
     include ::Capybara::DSL
     include ::Capybara::Minitest::Assertions
@@ -12,49 +11,52 @@ class ActivityLogSpec < Minitest::Spec
 
     before do
         visit '/'
-        within("#login-form") do
-            fill_in('username', with: "apple@frukt.se")
-            fill_in('password', with: "123")
-            click_button 'Logga in'
-            sleep 1
-        end
     end
 
     after do 
         Capybara.reset_sessions!
     end
 
-    it 'check for activity log id' do
-        _(page).must_have_css('#log-activity')
-    end
+    it 'login, create groupchat and logout' do
 
-    it 'write text in 4 textareas' do
+        sleep 1
+        find('a', text: 'Login').click
+        sleep 1
 
-        time = Time.now.to_s 
+        within("#login-form") do
+            fill_in('username', with: "Tester1")
+            fill_in('plaintext', with: "1")
+            sleep 1
+            click_button 'Login'
+        end
+        
+        _(page).must_have_css('#friends')
+        sleep 1
+        find('#toggle-menu').click
+        sleep 1
+        find('a', text: 'New Groupchat').click
+        sleep 1
 
-        @done = "Test fill: Lorem ipsum dolor sit amet: " << time
-        @learned = "Test fill: Consectetur adipiscing elit: " << time
-        @understood = "Test fill: Nam iaculis felis at lacus efficitur: " << time
-        @more = "Test fill: A tempor urna lacinia: " << time
-
-        within("#activity-log-form") do 
+        within("#new-groupchat-form") do
+            fill_in('group_name', with: "Test")
+            find('#Tester2').click
+            find('#Tester3').click
             sleep 1
-            fill_in 'done', with: @done
-            sleep 1
-            fill_in 'learned', with: @learned
-            sleep 1
-            fill_in 'understood', with: @understood
-            sleep 1
-            fill_in 'more', with: @more
-            sleep 1
-            click_button 'Spara'
+            click_button 'Start Chat'
             sleep 1
         end
 
-        _(page).must_have_content(@done)
-        _(page).must_have_content(@learned)
-        _(page).must_have_content(@understood)
-        _(page).must_have_content(@more)
+        find('#toggle-menu').click
+        sleep 1
+        find('a', text: 'Home').click
+        sleep 1
+        find('a', text: 'Groups').click
+        sleep 1
+        find('#toggle-menu').click
+        sleep 1
+        find('a', text: 'Logout').click
+        sleep 1
+
 
     end
 

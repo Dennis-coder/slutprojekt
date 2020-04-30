@@ -1,29 +1,29 @@
-div class='container home centeredColumn' 
+div class='container home centered-column' 
 
-    div class='friendsOrGroups centeredRow'
-        a class='option viewFriends active' href='#' onclick='viewFriends()' Friends
-        a class='option viewGroups' href='#' onclick='viewGroups()' Groups
+    div class='friendsOrGroups centered-row'
+        a class='option view-friends active' href='#' onclick='viewFriends()' Friends
+        a class='option view-groups' href='#' onclick='viewGroups()' Groups
     
-    div class='friends scroll' 
+    div#friends class='friends scroll' 
         -if friends.length < 1
-            div class='space centeredColumn'
+            div class='space centered-column'
                 p Try finding some friends to chat with
                 a class="button" href="/home/find_user" Click here to find a user
         -for friend in friends
-            == slim :'partials/friendCard', locals: {friend: friend}
-        div class='searchBar'
-            form class='space centeredRow' action='/home/friends/search' method='post'
+            == slim :'partials/friend_card', locals: {friend: friend}
+        div class='search-bar'
+            form class='space centered-row' action='/home/friends/search' method='post'
                 input type="text" placeholder='Find a friend...' name='search_term'
                 button type="submit"
                     img src="/media/search.svg"
     
-    div class='groups scroll hidden'
+    div#groups class='groups scroll hidden'
         -if groups.length < 1
-            div class='space centeredColumn'
+            div class='space centered-column'
                 p You are currently not in a groupchat
         -for group in groups
             div class='friend space'
-                a class='centeredColumn' href="/home/groups/#{group.id}"
+                a#group class='centered-column' href="/home/groups/#{group.id}"
                     h2 #{group.name}
                     -time = group.last_interaction.split
                     span class="timestamp" #{time[1][0..4]}, #{time[0]}

@@ -1,6 +1,6 @@
-div class='container centeredColumn'
-    div class='searchBar'
-        form class='space centeredRow' action='/home/friends/search' method='post'
+div class='container centered-column'
+    div class='search-bar'
+        form class='space centered-row' action='/home/friends/search' method='post'
             input type="text" placeholder='Search...' name='search_term'
             button type="submit"
                 img src="/media/search.svg"
@@ -10,4 +10,4 @@ div class='container centeredColumn'
         div class='friends scroll' 
             -for friend in results
                 div class='friend space'
-                    == slim :'partials/friendCard', locals: {friend: friend}
+                    == slim :'partials/friend_card', locals: {friend: friend}

@@ -7,3 +7,8 @@ gem 'wdm'
 gem 'rerun'
 gem 'bcrypt'
 gem 'localtunnel'
+
+gem 'capybara', '>=3.29'
+gem 'selenium-webdriver'
+gem 'minitest'
+gem 'minitest-reporters'

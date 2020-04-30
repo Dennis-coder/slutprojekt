@@ -1,21 +1,21 @@
-div class='container settings centeredColumn' 
+div class='container settings centered-column' 
 
     p = session['settings_error']
     -session.delete('settings_error')
 
-    a class='space option' onclick="changePassword()" 
+    a class='space option' onclick="togglePasswordChange()" 
         h2 Change password
 
-    form class='hidden password centeredColumn' action='/home/settings/change_password' method='post'
+    form class='hidden password centered-column' action='/home/settings/change_password' method='post'
         input type="password" name='current_password' placeholder='Current password...' 
         input type="password" name='new_password' placeholder='New password...' 
         input type="password" name='confirm_password' placeholder='Confirm new password...' 
         button type="submit" Proceed
 
-    a class='space option' onclick="reportUser()" 
+    a class='space option' onclick="toggleUserReport()" 
         h2 Report an user
     
-    form class='hidden report centeredColumn' action='/home/settings/report' method='post'
+    form class='hidden report centered-column' action='/home/settings/report' method='post'
         p class='space' Wrongfully reporting someone could result in getting banned
         input type="text" name='username' placeholder='Their username...' 
         input type="text" name='reason' placeholder='Reason why...' 

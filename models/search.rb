@@ -1,4 +1,4 @@
-class Search < DBEntity
+class Search
 
     def self.partial_match(username, term)
         username.each_char.with_index do |char, index|
@@ -21,7 +21,7 @@ class Search < DBEntity
         user_ids = User.all
         users = []
         user_ids.each do |id|
-            users << User.new(id['id'])
+            users << User.get(id['id'])
         end
         out = []
         users.each do |user|

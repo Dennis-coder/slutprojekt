@@ -1,0 +1,9 @@
+div class='container centered-column'
+    form#new-groupchat-form action="/home/new_chat" method="post"
+        div class='scroll'
+            input type='text' name='group_name' value='Group name'
+            -for friend in friends
+                div class="group-option"
+                    h2 #{friend.username}
+                    input id="#{friend.username}" type="checkbox" name=friend.username value=friend.id
+        button type="submit" Start Chat

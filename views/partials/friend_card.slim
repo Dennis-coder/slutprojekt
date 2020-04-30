@@ -1,5 +1,5 @@
 div class='friend space'
-    a class='centeredColumn' href="/home/friends/#{friend.username}"
+    a class='centered-column' href="/home/friends/#{friend.username}"
         h2 #{friend.username}
         -time = friend.last_interaction.split
         span class="timestamp" #{time[1][0..4]}, #{time[0]}

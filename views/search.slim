@@ -1,6 +1,6 @@
-div class='container centeredColumn'
-    div class='searchBar'
-        form class='space centeredRow' action='/home/find_user' method='post'
+div class='container centered-column'
+    div class='search-bar'
+        form class='space centered-row' action='/home/find_user' method='post'
             input type="text" placeholder='Search...' name='search_term'
             button type="submit"
                 img src="/media/search.svg"
@@ -8,9 +8,9 @@ div class='container centeredColumn'
         p No results
     -else
         -for result in results
-            div class='space results centeredColumn'
+            div#results class='space results centered-column'
                 h2 #{result.username}
-                div class="resultButtons"
+                div class="result-buttons"
                     -status = Friend.status?(result.id, @user.id)
                     -if status == "friends"
                         button onClick="request(#{result.id}, 'Unfriend')"  Already friends

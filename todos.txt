@@ -1,5 +1,0 @@
-sorter.rb - fixa en search results sorter
-
-övrigt - admin ska ha egna egenskaper
-       - dynamisk sql sträng
-       - profilbild samt skicka bilder
