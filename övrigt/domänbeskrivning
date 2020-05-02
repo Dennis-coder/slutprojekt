@@ -1,0 +1,28 @@
+websnap.com
+
+Web Snap är en digital plattform där privatpersoner kan skicka meddelanden mellan varandra
+
+Användare kan söka efter andra användare med hjälp av användarnamn och geotaggar. Användare kan även blir rekomederade användare om användarna har gemensamma vänner. 
+
+Användare kan skicka meddelanden till varandra.
+
+Det finns 3 olika sorters meddelanden
+
+1. 	Text chatt
+	Meddelandet har en text
+
+2. 	Bild chatt
+	Meddelandet har en bild, kan även innehålla en text
+
+(3. Video chatt
+	Meddelandet har en video, kan även innehålla en text) WIP
+
+Alla meddelanden innehåller tidsstämpel då det skickades, av vem det skickades, till vem det skickades, status(öppnat/oöppnat), 
+
+För att använda plattformen måste man skapa ett konto
+
+Inloggade användare kan se sina skickade meddelanden samt deras status, 
+
+Administratörer kan ta bort olämpliga konton
+
+En användares meddelanden kan sorteras från nyast till äldst eller äldst till nyast där oöppnade meddelanden har prioritering och hamnar därför längst upp
