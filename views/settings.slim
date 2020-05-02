@@ -10,7 +10,7 @@ div class='container settings centered-column'
         input type="password" name='current_password' placeholder='Current password...' 
         input type="password" name='new_password' placeholder='New password...' 
         input type="password" name='confirm_password' placeholder='Confirm new password...' 
-        button type="submit" Proceed
+        button type="submit" Change password
 
     a class='space option' onclick="toggleUserReport()" 
         h2 Report an user
@@ -19,6 +19,6 @@ div class='container settings centered-column'
         p class='space' Wrongfully reporting someone could result in getting banned
         input type="text" name='username' placeholder='Their username...' 
         input type="text" name='reason' placeholder='Reason why...' 
-        button type="submit" Proceed
+        button type="submit" Send report
 
     button class='space' onclick="deleteConfirm(#{@user.id})" Delete your account

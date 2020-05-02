@@ -1,16 +1,17 @@
 class SQLQuery < DBEntity
 
-    attr_accessor :query, :values
+    # attr_accessor :query, :values
 
     def initialize
         @query = ''
         @values = []
+        @table
     end
 
-    def insert(table, columns, values)
-        @query += "INSERT INTO " + table + ' ('
+    def add(table, columns, values)
+        @query += "INSERT INTO #{table} ("
         columns.each do |column|
-            @query += column + ','
+            @query += "#{column},"
         end
         @query[@query.length-1] = ''
         @query += ') VALUES(' + '?,' * columns.length
@@ -19,48 +20,57 @@ class SQLQuery < DBEntity
         values.each do |values|
             @values << values
         end
+        @table = table
         return self
     end
 
-    def get(columns, table)
+    def get(table, columns)
         @query += "SELECT "
         columns.each do |column|
             @query += column + ','
         end
         @query[@query.length-1] = ''
-        @query += " FROM " + table + ' '
+        @query += " FROM #{table} "
+        @table = table
         return self
     end
 
-    def delete(table)
-        @query += 'DELETE FROM ' + table + ' '
+    def del(table)
+        @query += "DELETE FROM #{table} "
+        @table = table
         return self
     end
 
     def update(table, columns, values)
-        @query += 'UPDATE ' + table + ' SET'
+        @query += "UPDATE #{table} SET"
         columns.each do |column|
-            @query += ' ' + column + ' = ?,'
+            @query += " #{column} = ?,"
         end
         @query[@query.length-1] = ' '
         values.each do |values|
             @values << values
         end
+        @table = table
         return self
     end
 
-    def <
+    def open_
         @query += '( '
         return self
     end
 
-    def >
+    def close_
         @query += ') '
         return self
     end
 
-    def where(column, value)
-        @query += 'WHERE ' + column + ' = ? '
+    def where
+        @query += 'WHERE '
+        return self
+    end
+
+    def if(column, value)
+        @query += "#{column} = ? "
         @values << value
         return self
     end
@@ -75,8 +85,34 @@ class SQLQuery < DBEntity
         return self
     end
 
+    def not
+        @query += 'NOT '
+        return self
+    end
+
+    def order(column)
+        @query += "ORDER BY #{column} "
+        return self
+    end
+
+    def join(table)
+        @query += "CROSS JOIN #{table} "
+        return self
+    end
+
+    def union
+        @query += 'UNION '
+        return self
+    end   
+
     def send
-        db.execute(@query, @values)
+        begin
+            db.execute(@query, @values)
+        rescue 
+            p @query
+            p @values
+            db.execute(@query, @values)
+        end
     end
 
 end

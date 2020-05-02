@@ -9,12 +9,12 @@ class Report < DBEntity
     end
     
     def send()
-        db.execute("INSERT INTO reports (accused, accuser, reason) VALUES(?,?,?)", @accused, @accuser, @reason)
+        SQLQuery.new.add('reports', ['accused', 'accuser', 'reason'], [@accused, @accuser, @reason]).send
     end
 
     def self.get(id)
         report = Report.new()
-        properties = db.execute("SELECT * FROM reports WHERE id = ?", id).first
+        properties = SQLQuery.new.get('reports', ['*']).where.if('id', id).send.first
         report.id = properties['id']
         report.accuser = properties['accuser']
         report.accused = properties['accused']
@@ -24,7 +24,7 @@ class Report < DBEntity
     end
 
     def self.get_all
-        hash_list = db.execute("SELECT id FROM reports")
+        hash_list = SQLQuery.new.get('reports', ['id']).send
         list = []
         hash_list.each do |hash|
             list << Report.get(hash['id'])
@@ -33,7 +33,7 @@ class Report < DBEntity
     end
 
     def self.delete(id)
-        db.execute("DELETE FROM reports WHERE id = ?", id)
+        SQLQuery.new.del('reports').where.if('id', id).send
     end
 
 end

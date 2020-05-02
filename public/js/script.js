@@ -50,14 +50,14 @@ function startChecker(friendId) {
 }
 
 function showMessages(friendId) {
-	latest = document.querySelector('.timestampChecker').value;
+	latest = document.querySelector('.timestamp-checker').value;
 	getNewMessages(friendId, latest).then(messages => {
 		for (i in messages){
 			message = messages[i]
 			time = message['timestamp'].split(" ");
 			messagesDiv = document.querySelector('.messages');
-			messagesDiv.innerHTML += `<div class='messageDiv centeredColumn space'><div class='message leftMessage'><p>${message['text']}</p></div><span class="timestamp">${time[1].slice(0, 5)}, ${time[0]}</span></div>`;
-			document.querySelector('.timestampChecker').value = message['timestamp'];
+			messagesDiv.innerHTML += `<div class='message-div centered-column space'><div class='message left-message'><p>${message['text']}</p></div><span class="timestamp">${time[1].slice(0, 5)}, ${time[0]}</span></div>`;
+			document.querySelector('.timestamp-checker').value = message['timestamp'];
 			scrollToBottom()
 		}
 	})
@@ -69,14 +69,14 @@ function startGroupChecker(groupId) {
 }
 
 function showGroupMessages(groupId) {
-	latest = document.querySelector('.timestampChecker').value;
+	latest = document.querySelector('.timestamp-checker').value;
 	getNewGroupMessages(groupId, latest).then(messages => {
 		for (i in messages){
 			message = messages[i]
 			time = message['timestamp'].split(" ");
 			messagesDiv = document.querySelector('.messages');
-			messagesDiv.innerHTML += `<p>${message['sender']}</p><div class='messageDiv centeredColumn'><div class='message leftMessage'><p>${message['text']}</p></div><span class="timestamp">${time[1].slice(0, 5)}, ${time[0]}</span></div>`;
-			document.querySelector('.timestampChecker').value = message['timestamp'];
+			messagesDiv.innerHTML += `<p>${message['sender']}</p><div class='message-div centered-column'><div class='message left-message'><p>${message['text']}</p></div><span class="timestamp">${time[1].slice(0, 5)}, ${time[0]}</span></div>`;
+			document.querySelector('.timestamp-checker').value = message['timestamp'];
 			scrollToBottom()
 		}
 	})

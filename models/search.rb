@@ -25,7 +25,7 @@ class Search
         end
         out = []
         users.each do |user|
-            if Search.partial_match(user.username.downcase, term.downcase) == true && user.id != user_id
+            if Search.partial_match(user.username.downcase, term.downcase) == true && user.id != user_id && user.username != 'Deleted user'
                 out << user
             end
         end

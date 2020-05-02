@@ -12,23 +12,23 @@ class Message < DBEntity
 
     def send()
         if @type == 'friend'
-            db.execute("INSERT INTO messages (text, timestamp, sender_id, reciever_id) VALUES(?,?,?,?)", @text, "#{Time.now}", @sender_id, @reciever_id)
-        
-            db.execute("UPDATE friends SET last_interaction = ? WHERE id = ?", "#{Time.now}", Friend.relation_id(@sender_id, @reciever_id))
+            SQLQuery.new.add('messages',['text','timestamp','sender_id','reciever_id'],[@text, Time.now.to_s, @sender_id, @reciever_id]).send
+
+            SQLQuery.new.update('friends', ['last_interaction'], [Time.now.to_s]).where.if('id', Friend.relation_id(@sender_id, @reciever_id)).send
         else
-            db.execute("INSERT INTO groups_messages (text, timestamp, sender_id, group_id) VALUES(?,?,?,?)", @text, "#{Time.now}", @sender_id, @group_id)
-            
-            db.execute("UPDATE groups SET last_interaction = ? WHERE id = ?", "#{Time.now}", @group_id)
+            SQLQuery.new.add('groups_messages',['text','timestamp','sender_id','group_id'],[@text, Time.now.to_s, @sender_id, @group_id]).send
+
+            SQLQuery.new.update('groups', ['last_interaction'], [Time.now.to_s]).where.if('id', @group_id).send
         end
     end
 
     def self.get(id, type)
         msg = Message.new()
         if type == 'friend'
-            properties = db.execute('SELECT id,text,reciever_id,sender_id,timestamp FROM messages WHERE id = ?', id).first
+            properties = SQLQuery.new.get('messages', ['id', 'text', 'reciever_id', 'sender_id', 'timestamp']).where.if('id', id).send.first
             msg.reciever_id = properties['reciever_id']
         else
-            properties = db.execute('SELECT id,text,group_id,sender_id,timestamp FROM groups_messages WHERE id = ?', id).first
+            properties = SQLQuery.new.get('groups_messages', ['id', 'text', 'group_id', 'sender_id', 'timestamp']).where.if('id', id).send.first
             msg.group_id = properties['group_id']
         end
         msg.id = properties['id']

@@ -1,5 +1,6 @@
 require 'sqlite3'
 require_relative 'models/DBEntity.rb'
+require_relative 'models/SQLQuery.rb'
 require_relative 'models/DBTest.rb'
 
 result = DBTest.connection

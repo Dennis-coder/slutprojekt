@@ -10,11 +10,11 @@ class User < DBEntity
     end
     
     def add()
-        db.execute("INSERT INTO users (username, password_hash, admin) VALUES(?,?,?)", @username, @password_hash, 0)
+        SQLQuery.new.add('users', ['username', 'password_hash', 'admin'], [@username, @password_hash, 0]).send
     end
     
     def friendslist()
-        hash_list = db.execute("SELECT user_id, user2_id FROM friends WHERE (user_id = ? OR user2_id = ?) AND status = ?", @id, @id, 0)
+        hash_list = SQLQuery.new.get('friends', ['user_id', 'user2_id']).where.open_.if('user_id', @id).or.if('user2_id', @id).close_.and.if('status', 0).send
         list = []
         hash_list.each do |hash|
             if hash['user_id'] == @id
@@ -27,7 +27,7 @@ class User < DBEntity
     end
 
     def groups()
-        id_list = db.execute("SELECT group_id FROM groups_handler WHERE user_id = ?", @id)
+        id_list = SQLQuery.new.get('groups_handler', ['group_id']).where.if('user_id', @id).send
         groups_list = []
         id_list.each do |id|
             groups_list << Groupchat.get(id['group_id'])
@@ -36,8 +36,7 @@ class User < DBEntity
     end
 
     def messages(id)
-        hash_list = db.execute("SELECT id FROM messages WHERE reciever_id = ? OR sender_id = ?", @id, @id)
-        list = []
+        hash_list = SQLQuery.new.get('messages', ['id']).where.if('reciever_id', @id).or.if('sender_id', @id).send
         hash_list.each do |hash|
             list << Message.get(hash['friends_id'])
         end
@@ -46,7 +45,7 @@ class User < DBEntity
 
     def self.get(id)
         user = User.new()
-        properties = db.execute("SELECT * FROM users WHERE id = ?", id).first
+        properties = SQLQuery.new.get('users', ['*']).where.if('id', id).send.first
         user.id = properties['id']
         user.username = properties['username']
         user.password_hash = properties['password_hash']
@@ -56,24 +55,24 @@ class User < DBEntity
     end
 
     def self.id(username)
-        db.execute("SELECT id FROM users WHERE username = ?", username).first['id']
+        SQLQuery.new.get('users', ['id']).where.if('username', username).send.first['id']
     end
 
     def self.username(id)
-        db.execute("SELECT username FROM users WHERE id = ?", id).first['username']
+        SQLQuery.new.get('users', ['username']).where.if('id', id).send.first['username']
     end
 
     def self.all
-        db.execute("SELECT id FROM users")
+        SQLQuery.new.get('users', ['id']).send
     end
 
     def self.change_password(id, password)
-        db.execute("UPDATE users SET password_hash = ? WHERE id = ?", BCrypt::Password.create(password), id)
+        SQLQuery.new.update('users', ['password_hash'], [BCrypt::Password.create(password)]).where.if('id', id).send
     end
 
     def self.delete(id)
-        db.execute("UPDATE users SET username = ? WHERE id = ?", 'Deleted user', id)
-        db.execute("DELETE FROM reports WHERE accused = ?", id)
+        SQLQuery.new.update('users', ['username', 'password_hash'], ['Deleted user', 'Deleted user']).where.if('id', id).send
+        SQLQuery.new.del('reports').where.if('accused', id).send
     end
     
 end

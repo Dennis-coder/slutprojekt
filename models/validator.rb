@@ -63,10 +63,12 @@ class Validator
 
     def self.change_password(password_hash, params)
         if BCrypt::Password.new(password_hash) == params['current_password']
-            if params['new_password'] == params['confirm_password']
-                return true
-            else
+            if params['new_password'] != params['confirm_password']
                 return 'The new passwords do not match'
+            elsif params['current_password'] == params['new_password']
+                return 'The new password cannot be the same as your current one'
+            else
+                return true
             end
         else
             return 'Wrong password'
