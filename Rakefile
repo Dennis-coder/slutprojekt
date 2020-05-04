@@ -1,5 +1,4 @@
 require 'sqlite3'
-require_relative 'models/DBEntity.rb'
 require_relative 'models/SQLQuery.rb'
 require_relative 'models/DBTest.rb'
 
@@ -25,11 +24,3 @@ task :acceptance do
     Rake::Task["seed"].invoke #reset db before each test file is run
     system("bundle exec 'ruby ./spec/acceptance/tests.rb'")        
 end
-
-#rake run
-#rake debug
-#rake seed
-#rake test:unit
-#rake test:acceptance
-
-#http://127.0.0.1:9292/

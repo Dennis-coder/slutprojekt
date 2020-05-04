@@ -1,4 +1,4 @@
-class Message < DBEntity
+class Message
 
     attr_accessor :id, :text, :reciever_id, :sender_id, :timestamp, :type, :group_id
 
@@ -10,6 +10,7 @@ class Message < DBEntity
         @type == nil
     end
 
+    # Stores a message in the database.
     def send()
         if @type == 'friend'
             SQLQuery.new.add('messages',['text','timestamp','sender_id','reciever_id'],[@text, Time.now.to_s, @sender_id, @reciever_id]).send
@@ -22,6 +23,12 @@ class Message < DBEntity
         end
     end
 
+    # Get a message.
+    # 
+    # id - The message id.
+    # type - The message type, friend or group.
+    # 
+    # Returns the message.
     def self.get(id, type)
         msg = Message.new()
         if type == 'friend'

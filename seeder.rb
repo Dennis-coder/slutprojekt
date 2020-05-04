@@ -2,12 +2,10 @@ require 'sqlite3'
 require 'bcrypt'
 Dir.glob('models/*.rb') { |model| require_relative model }
 
-# Public: Resets the database and adds some data.
-#
-# db  - The database.
+# Resets the database and adds some data.
 class Seeder
 
-    # Public: Calls the different functions to reset the database.
+    # Calls the different functions to reset the database.
     #
     # db  - The database.
     def self.seed!
@@ -17,14 +15,14 @@ class Seeder
         populate_tables(db)
     end
 
-    # Public: Connects to the database.
+    # Connects to the database.
     # 
     # Returns the database.
     def self.connect
         SQLite3::Database.new "db/websnap.db"
     end
 
-    # Public: Deletes the tables.
+    # Deletes the tables.
     #
     # db  - The database.
     def self.drop_tables(db)
@@ -37,7 +35,7 @@ class Seeder
         db.execute("DROP TABLE IF EXISTS reports")
     end
 
-    # Public: Creates the tables.
+    # Creates the tables.
     #
     # db  - The database.
     def self.create_tables(db)
@@ -99,10 +97,12 @@ class Seeder
         SQL
     end
 
-    # Public: Adds data to some of the database tables
+    # Adds data to some of the database tables
     #
     # db  - The database.
     def self.populate_tables(db)
+        db.execute("INSERT INTO users (id, username, password_hash, admin) VALUES(?,?,?,?)", 0, 'Deleted user', 'Deleted user', 0)
+
         users = [
             {username: "Tester1", password_hash: BCrypt::Password.create("1"), admin: 1},
             {username: "Tester2", password_hash: BCrypt::Password.create("2"), admin: 0},

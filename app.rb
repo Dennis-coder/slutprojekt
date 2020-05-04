@@ -1,11 +1,10 @@
-require_relative 'models/DBEntity.rb'
 Dir.glob('models/*.rb') { |model| require_relative model }
 
 class Application < Sinatra::Base
     
     enable :sessions
 
-    # Public: Checks the connection to the database and gets a user
+    # Checks the connection to the database and gets a user
     #
 	# DBTest  - The class for the test.
 	# session['db_error'] - True or False depending on if there is an error with the connection to the database
@@ -19,11 +18,16 @@ class Application < Sinatra::Base
 			session.delete('db_error')
 		end
 		if session['user_id'] != nil
-			@user = User.get(session['user_id'])
+			begin
+				@user = User.get(session['user_id'])
+			rescue
+				session.delete('user_id')
+				redirect '/'
+			end
 		end
 	end
 
-	# Public: Checks if you are logged in.
+	# Checks if you are logged in.
     #
     # session['user_id'] - Your user id if you are logged in.
 	before '/home/?' do
@@ -32,7 +36,7 @@ class Application < Sinatra::Base
 		end
 	end
 
-	# Public: Checks if you are logged in.
+	# Checks if you are logged in.
     #
     # session['user_id'] - Your user id if you are logged in.
 	before '/home/*' do
@@ -41,7 +45,7 @@ class Application < Sinatra::Base
 		end
 	end
 
-	# Public: Checks if you are an admin.
+	# Checks if you are an admin.
     #
     # @user - Your own user.
 	before '/home/admin/?' do
@@ -50,7 +54,7 @@ class Application < Sinatra::Base
 		end
 	end
 
-	# Public: Checks if you are an admin.
+	# Checks if you are an admin.
     #
     # @user - Your own user.
 	before '/home/admin/*' do
@@ -59,7 +63,7 @@ class Application < Sinatra::Base
 		end
 	end
 
-	# Public: Checks the connection to the databse after already having an error.
+	# Checks the connection to the databse after already having an error.
     #
     # DBTest - The class for the test.
 	before '/error' do
@@ -69,7 +73,7 @@ class Application < Sinatra::Base
 		end
 	end
 
-	# Public: Checks if you are already logged in
+	# Checks if you are already logged in
     #
     # session['user_id'] - Your user id if you are logged in.
 	get '/?' do
@@ -79,12 +83,12 @@ class Application < Sinatra::Base
         slim :index
     end
 
-	# Public: The login page.
+	# The login page.
 	get '/login/?' do
         slim :login
     end
 
-	# Public: Validates you login information and logs you in if they are correct.
+	# Validates you login information and logs you in if they are correct.
     #
 	# login_cooldown - The time you have to wait between login attempts in seconds.
 	# session['last_login'] - Stores the time of your last login attempt.
@@ -109,12 +113,12 @@ class Application < Sinatra::Base
 		redirect '/login'
 	end
 
-	# Public: The register page.
+	# The register page.
 	get '/register/?' do
 		slim :register
 	end
 
-	# Public: Validates the register information.
+	# Validates the register information.
     #
 	# result - Gets either an error or True from the validation.
 	# params - the register information.
@@ -137,7 +141,7 @@ class Application < Sinatra::Base
 		end
 	end
 
-	# Public: Logs you out from the website.
+	# Logs you out from the website.
 	# 
 	# session['user_id'] - Your user id.
 	get '/logout/?' do
@@ -145,14 +149,14 @@ class Application < Sinatra::Base
 		redirect '/'
 	end
 
-	# Public: The home page.
+	# The home page.
 	# 
 	# @user - Your own user.
 	get '/home/?' do
 		slim :home, locals: {friends: @user.friendslist, groups: @user.groups}
 	end
 	
-	# Public: The conversation with a friend.
+	# The conversation with a friend.
 	# 
 	# Friend - The class that handles friends.
 	# @user - Your own user.
@@ -161,7 +165,7 @@ class Application < Sinatra::Base
 		slim :conversation, locals: {friend: Friend.get(@user.id, User.id(params['username']))}
 	end
 
-	# Public: Checks if the searchterm is empty and redirects accordingly.
+	# Checks if the searchterm is empty and redirects accordingly.
 	# 
 	# params['search_term'] - The term the user wrote to search for.
 	post '/home/friends/search' do
@@ -172,7 +176,7 @@ class Application < Sinatra::Base
 		end
 	end
 
-	# Public: The search results page for friends with the results.
+	# The search results page for friends with the results.
 	# 
 	# @user - Your own user.
 	# params['term'] - The searchterm.
@@ -181,7 +185,7 @@ class Application < Sinatra::Base
 		slim :friend_search, locals: {results: Search.find_friends(@user, params['term'])}
 	end
 	
-	# Public: The find a user page.
+	# The find a user page.
 	# 
 	# @user - Your own user.
 	# Friend - the class that handles friends.
@@ -189,7 +193,7 @@ class Application < Sinatra::Base
 		slim :search, locals: {results: Friend.pending_requests(@user.id)}
 	end
 
-	# Public: Checks if the searchterm is empty and redirects accordingly.
+	# Checks if the searchterm is empty and redirects accordingly.
 	# 
 	# params['search_term'] - The term the user wrote to search for.
 	post '/home/find_user' do
@@ -200,7 +204,7 @@ class Application < Sinatra::Base
 		end
 	end
 
-	# Public: The results page for finding a user with the results.
+	# The results page for finding a user with the results.
 	# 
 	# @user - Your own user.
 	# params['searchterm'] - The searchterm.
@@ -209,7 +213,7 @@ class Application < Sinatra::Base
 		slim :search, locals: {results: Search.find_users(params['search_term'], @user.id)}
 	end
 
-	# Public: The new groupchat page.
+	# The new groupchat page.
 	# 
 	# @user - Your own user.
 	# Sorter - The class that handles sorting functions.
@@ -217,7 +221,7 @@ class Application < Sinatra::Base
 		slim :new_chat, locals: {friends: Sorter.alphabetical(@user.friendslist)}
 	end
 
-	# Public: Checks how many are in the groupchat and makes one if there are more than 1.
+	# Checks how many are in the groupchat and makes one if there are more than 1.
 	# 
 	# params - Contains all the users to be added.
 	# User - The class that handles all the user functions
@@ -240,7 +244,7 @@ class Application < Sinatra::Base
 		end
 	end
 
-	# Public: The groupchat page.
+	# The groupchat page.
 	get '/home/groups/:id/?' do
 		group = Groupchat.get(params['id'])
 		slim :group, locals: {group: group}
@@ -251,7 +255,7 @@ class Application < Sinatra::Base
 		slim :settings
 	end
 
-	# Public: Validates the password data and changes the password.
+	# Validates the password data and changes the password.
 	# 
 	# result - Is True or False depending on the validation.
 	# Validator - The class that handles all user inputs and validates them.
@@ -270,7 +274,7 @@ class Application < Sinatra::Base
 		redirect '/home/settings'
 	end
 
-	# Public: Validates the report data and sends the report.
+	# Validates the report data and sends the report.
 	# 
 	# result - Is True or False depending on the validation.
 	# Validator - The class that handles all user inputs and validates them.
@@ -294,19 +298,19 @@ class Application < Sinatra::Base
 		redirect '/home/settings'
 	end
 
-	# Public: The admins only page.
+	# The admins only page.
 	get '/home/admin/?' do
 		reports = Report.get_all
 		slim :admin, locals: {reports: reports}
 	end
 
-	# Public: The connection error page.
+	# The connection error page.
 	get '/error/?' do 
 		slim :db_error
 	end
 
 
-	# Public: Gets the user id for a user.
+	# Gets the user id for a user.
 	# 
 	# User - The class that handles all user functions.
 	# params['username'] - The username of the user whose id we want.
@@ -316,25 +320,41 @@ class Application < Sinatra::Base
 		return User.id(params['username']).to_json
 	end
 
-	# Public: Gets the current time.
+	# Gets the current time.
 	# 
 	# Returns the time.
 	get '/api/get/timestamp' do
 		return Time.now.to_json
 	end
 
-	get '/api/messages/:id/:latest' do
-		messages = Friend.new_messages(@user.id, params)
+	# Gets new messages for the current conversation.
+	# 
+	# messages - The new messages.
+	# Friend - The class that handles friend functions.
+	# @user - Your own user.
+	# params - Includes type (friend or group), the id of the friend or the group and when the latest message shown was sent.
+	# 
+	# Returns the new messages.
+	get '/api/get/:type/messages/:id/:latest' do
+		if params['type'] == 'friend'
+			messages = Friend.new_messages(@user.id, params)
+		else
+			messages = Groupchat.new_messages(@user.id, params)
+		end
 		return messages.to_json
 	end
 
-	get '/api/group_messages/:group_id/:latest' do
-		messages = Groupchat.new_messages(@user.id, params)
-		return messages.to_json
-	end
-
+	# Stores a message in the database
+	# 
+	# message_cooldown - The time in seconds you have to wait before sending a new message.
+	# session['time_last_message'] - The time you sent your last message.
+	# Validator - The class that handles all validation.
+	# params - Includes all the attributes for the message.
+	# msg - The message to be stored.
+	# session['message_error'] - The error message if you cannot send the message.
 	get '/api/message/send/:type/:text/:reciever' do
-		if session['time_last_message'] == nil || (Time.now - session['time_last_message']) >= 1
+		message_cooldown = 1
+		if session['time_last_message'] == nil || (Time.now - session['time_last_message']) >= message_cooldown
 			if Validator.message(params['text']) 
 				session['time_last_message'] = Time.now
 				msg = Message.new()
@@ -346,29 +366,43 @@ class Application < Sinatra::Base
 				msg.send
 			end
 		else
-			session['message_error'] = "Please wait 1 second before sending another message"
+			session['message_error'] = "Please wait #{(message_cooldown - (Time.now - session['time_last_message'])).ceil} second before sending another message"
 		end
 	end
 
-	get '/api/requests/:user_id/send' do
-		Friend.send_request(@user.id, params['user_id'].to_i)
+	# Handles a friend request.
+	# 
+	# Friend - The class that handles all friend functions.
+	# @user - Your own user.
+	# params - Includes the user id of the other person and the action.
+	get '/api/requests/:user_id/:action' do
+		p params
+		if params['action'] == 'Send'
+			Friend.send_request(@user.id, params['user_id'].to_i)
+		elsif params['action'] == 'Accept'
+			Friend.accept_request(@user.id, params['user_id'])
+		else
+			Friend.delete(@user.id, params['user_id'])
+		end
 	end
 
-	get '/api/requests/:user_id/accept' do
-		Friend.accept_request(@user.id, params['user_id'])
-	end
-
-	get '/api/requests/:user_id/delete' do
-		Friend.delete(@user.id, params['user_id'])
-	end
-
+	# Deletes a user.
+	# 
+	# params - Includes the user id of the account getting deleted.
+	# @user - Your own user.
+	# session['user_id'] - The user id of the account logged in.
+	# User - The class that handles all user functions.
 	get '/api/admin/delete_user/:id' do
-		if params['id'] == session['user_id']
+		if params['id'].to_i == @user.id
 			session.delete('user_id')
 		end
 		User.delete(params['id'])
 	end
 
+	# Removes a report.
+	# 
+	# Report - The class that handles all report functions.
+	# params - Includes the id of the report to be deleted.
 	get '/api/admin/remove_report/:id' do
 		Report.delete(params['id'])
 	end

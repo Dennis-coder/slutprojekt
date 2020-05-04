@@ -1,5 +1,13 @@
+# The class that handles all search functions.
 class Search
 
+    # Checks if the term is a part of the username.
+    # 
+    # username - The username to be checked.
+    # term - The search term.
+    # matched - The amount of matching characters.
+    # 
+    # Returns true or false
     def self.partial_match(username, term)
         username.each_char.with_index do |char, index|
             if char == term[0]
@@ -17,6 +25,13 @@ class Search
         return false
     end
 
+    # Finds all users with a username that contains the serach term.
+    # 
+    # term - The search term.
+    # user_id - Your own user id.
+    # user_ids - All user ids.
+    # 
+    # Returns a list with all users with a username that contains the search term.
     def self.find_users(term, user_id)
         user_ids = User.all
         users = []
@@ -29,9 +44,16 @@ class Search
                 out << user
             end
         end
-        return Sorter.search(out)
+        return out
     end
 
+    # Finds all friends with a username that contains the serach term.
+    # 
+    # term - The search term.
+    # user - Your own user.
+    # friendslist - All friends id.
+    # 
+    # Returns a list with all friends with a username that contains the search term.
     def self.find_friends(user, term)
         friendslist = user.friendslist
         out = []
@@ -40,7 +62,7 @@ class Search
                 out << friend
             end
         end
-        return Sorter.search(out)
+        return out
     end
 
 end

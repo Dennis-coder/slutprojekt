@@ -1,0 +1,27 @@
+websnap.com
+
+Web Snap är en digital plattform där privatpersoner kan skicka meddelanden mellan varandra samt skapa grupper till vilka man kan skicka meddelanden för större samtal.
+
+För att använda plattformen måste man skapa ett konto
+
+Inloggade användare kan se sina konversationer med kompisar samt grupper. 
+
+De kan söka efter andra användare med hjälp av användarnamn. 
+
+De kan rapportera andra användare.
+
+De kan ta bort sitt egna konto.
+
+De kan skapa grupper.
+
+De kan skicka meddelanden till varandra och till grupper.
+
+Det finns 2 olika sorters meddelanden
+
+1. 	Text
+
+2. 	Text (Grupp)
+
+Alla meddelanden innehåller ett id, text, en tidsstämpel då det skickades, av vem det skickades samt till vem/vilken grupp det skickades.
+
+Administratörer kan kolla igenom rapporter som skickats samt ta bort olämpliga konton.

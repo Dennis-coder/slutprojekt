@@ -20,10 +20,8 @@ div class='container conversation centered-column'
 
     div class='space centered-row'
         input name='msg' class='text' placeholder='Write message here...'
-        button#send-msg onClick='sendGroupMessage(#{group.id})' Send
+        button#send-msg onClick="sendMessage(#{group.id}, 'group')" Send
     
-    body onload="startGroupChecker(#{group.id})"
-    -if group.messages.last != nil
-        input class='timestamp-checker hidden' value='#{group.messages.last.timestamp}'
-    -else
-        input class='timestamp-checker hidden' value='#{Time.now}'
+    input class='timestamp-checker hidden' value='#{Time.now}'
+    body onload="startChecker(#{group.id}, 'group')"
+    

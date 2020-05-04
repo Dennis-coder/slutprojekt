@@ -17,10 +17,7 @@ div class='container conversation centered-column'
 
     div class='space centered-row'
         input class='text' placeholder='Write message here...'
-        button onClick="sendMessage(#{friend.id}, '#{@user.username}')" Send
+        button onClick="sendMessage(#{friend.id}, 'friend')" Send
     
-    body onload="startChecker(#{friend.id})"
-    -if friend.messages.last != nil
-        input class='timestamp-checker hidden' value='#{friend.messages.last.timestamp}'
-    -else
-        input class='timestamp-checker hidden' value='#{Time.now}'
+    input class='timestamp-checker hidden' value='#{Time.now}'
+    body onload="startChecker(#{friend.id}, 'friend')"
